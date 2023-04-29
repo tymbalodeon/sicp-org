@@ -575,26 +575,48 @@ beyond these considerations, programming in Lisp is great fun.
 :custom_id: section-1.1
 :end:
 
-A powerful programming language is more than just a means for instructing a computer to perform tasks.  The language also serves as a framework within which we organize our ideas about processes.  Thus, when we describe a language, we should pay particular attention to the means that the language provides for combining simple ideas to form more complex ideas.  Every powerful language has three mechanisms for accomplishing this:
+A powerful programming language is more than just a means for instructing a
+computer to perform tasks. The language also serves as a framework within which
+we organize our ideas about processes. Thus, when we describe a language, we
+should pay particular attention to the means that the language provides for
+combining simple ideas to form more complex ideas. Every powerful language has
+three mechanisms for accomplishing this:
 
-- <<i297>> primitive expressions which represent the simplest entities the language is concerned with,
+- <<i297>> primitive expressions which represent the simplest entities the
+  language is concerned with,
 
-- <<i228>> means of combination by which compound elements are built from simpler ones, and
+- <<i228>> means of combination by which compound elements are built from
+  simpler ones, and
 
-- <<i227>> means of abstraction by which compound elements can be named and manipulated as units.
+- <<i227>> means of abstraction by which compound elements can be named and
+  manipulated as units.
 
-In programming, we deal with two kinds of elements: procedures and data.  (Later we will discover that they are really not so distinct.)  Informally, data is "stuff" that we want to manipulate, and procedures are descriptions of the rules for manipulating the data.  Thus, any powerful programming language should be able to describe primitive data and primitive procedures and should have methods for combining and abstracting procedures and data.
+In programming, we deal with two kinds of elements: procedures and data. (Later
+we will discover that they are really not so distinct.) Informally, data is
+"stuff" that we want to manipulate, and procedures are descriptions of the rules
+for manipulating the data. Thus, any powerful programming language should be
+able to describe primitive data and primitive procedures and should have methods
+for combining and abstracting procedures and data.
 
-In this chapter we will deal only with simple numerical data so that we can focus on the rules for building procedures.[fn:4] In later chapters we will see that these same rules allow us to build procedures to manipulate compound data as well.
+In this chapter we will deal only with simple numerical data so that we can
+focus on the rules for building procedures.[fn:4] In later chapters we will see
+that these same rules allow us to build procedures to manipulate compound data
+as well.
 
 *** 1.1.1 Expressions
 :properties:
 :custom_id: section-1.1.1
 :end:
 
-One easy way to get started at programming is to examine some typical interactions with an interpreter for the Scheme dialect of Lisp.  Imagine that you are sitting at a computer terminal.  You type an <<i134>> expression, and the interpreter responds by displaying the result of its <<i128>> evaluating that expression.
+One easy way to get started at programming is to examine some typical
+interactions with an interpreter for the Scheme dialect of Lisp. Imagine that
+you are sitting at a computer terminal. You type an <<i134>> expression, and
+the interpreter responds by displaying the result of its <<i128>> evaluating
+that expression.
 
-One kind of primitive expression you might type is a number.  (More precisely, the expression that you type consists of the numerals that represent the number in base 10.)  If you present Lisp with a number
+One kind of primitive expression you might type is a number. (More precisely,
+the expression that you type consists of the numerals that represent the number
+in base 10.) If you present Lisp with a number
 
 #+begin_src scheme
 486
@@ -606,7 +628,9 @@ the interpreter will respond by printing [fn:5]
 486
 #+end_src
 
-Expressions representing numbers may be combined with an expression representing a primitive procedure (such as ~+~ or ~*~) to form a compound expression that represents the application of the procedure to those numbers.  For example:
+Expressions representing numbers may be combined with an expression representing
+a primitive procedure (such as ~+~ or ~*~) to form a compound expression that
+represents the application of the procedure to those numbers. For example:
 
 #+begin_src scheme
 (+ 137 349)
@@ -625,9 +649,19 @@ Expressions representing numbers may be combined with an expression representing
 12.7
 #+end_src
 
-Expressions such as these, formed by delimiting a list of expressions within parentheses in order to denote procedure application, are called <<i67>> combinations.  The leftmost element in the list is called the <<i270>> operator, and the other elements are called <<i269>> operands.  The value of a combination is obtained by applying the procedure specified by the operator to the <<i21>> arguments that are the values of the operands.
+Expressions such as these, formed by delimiting a list of expressions within
+parentheses in order to denote procedure application, are called <<i67>>
+combinations. The leftmost element in the list is called the <<i270>> operator,
+and the other elements are called <<i269>> operands. The value of a combination
+is obtained by applying the procedure specified by the operator to the <<i21>>
+arguments that are the values of the operands.
 
-The convention of placing the operator to the left of the operands is known as <<i294>> prefix notation, and it may be somewhat confusing at first because it departs significantly from the customary mathematical convention.  Prefix notation has several advantages, however.  One of them is that it can accommodate procedures that may take an arbitrary number of arguments, as in the following examples:
+The convention of placing the operator to the left of the operands is known as
+<<i294>> prefix notation, and it may be somewhat confusing at first because it
+departs significantly from the customary mathematical convention. Prefix
+notation has several advantages, however. One of them is that it can
+accommodate procedures that may take an arbitrary number of arguments, as in the
+following examples:
 
 #+begin_src scheme
 (+ 21 35 12 7)
@@ -637,22 +671,28 @@ The convention of placing the operator to the left of the operands is known as <
 1200
 #+end_src
 
-No ambiguity can arise, because the operator is always the leftmost element and the entire combination is delimited by the parentheses.
+No ambiguity can arise, because the operator is always the leftmost element and
+the entire combination is delimited by the parentheses.
 
-A second advantage of prefix notation is that it extends in a straightforward way to allow combinations to be nested, that is, to have combinations whose elements are themselves combinations:
+A second advantage of prefix notation is that it extends in a straightforward
+way to allow combinations to be nested, that is, to have combinations whose
+elements are themselves combinations:
 
 #+begin_src scheme
 (+ (* 3 5) (- 10 6))
 19
 #+end_src
 
-There is no limit (in principle) to the depth of such nesting and to the overall complexity of the expressions that the Lisp interpreter can evaluate.  It is we humans who get confused by still relatively simple expressions such as
+There is no limit (in principle) to the depth of such nesting and to the overall
+complexity of the expressions that the Lisp interpreter can evaluate. It is we
+humans who get confused by still relatively simple expressions such as
 
 #+begin_src scheme
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 #+end_src
 
-which the interpreter would readily evaluate to be 57.  We can help ourselves by writing such an expression in the form
+which the interpreter would readily evaluate to be 57. We can help ourselves by
+writing such an expression in the form
 
 #+begin_src scheme
 (+ (* 3
@@ -662,9 +702,17 @@ which the interpreter would readily evaluate to be 57.  We can help ourselves by
       6))
 #+end_src
 
-following a formatting convention known as <<i295>> pretty-printing, in which each long combination is written so that the operands are aligned vertically.  The resulting indentations display clearly the structure of the expression.[fn:6]
+following a formatting convention known as <<i295>> pretty-printing, in which
+each long combination is written so that the operands are aligned vertically.
+The resulting indentations display clearly the structure of the
+expression.[fn:6]
 
-Even with complex expressions, the interpreter always operates in the same basic cycle: It reads an expression from the terminal, evaluates the expression, and prints the result.  This mode of operation is often expressed by saying that the interpreter runs in a <<i319>> read-eval-print loop.  Observe in particular that it is not necessary to explicitly instruct the interpreter to print the value of the expression.[fn:7]
+Even with complex expressions, the interpreter always operates in the same basic
+cycle: It reads an expression from the terminal, evaluates the expression, and
+prints the result.  This mode of operation is often expressed by saying that the
+interpreter runs in a <<i319>> read-eval-print loop.  Observe in particular that
+it is not necessary to explicitly instruct the interpreter to print the value of
+the expression.[fn:7]
 
 *** 1.1.2 Naming and the Environment
 :properties:
