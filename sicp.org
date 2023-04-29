@@ -1998,7 +1998,9 @@ Give concise mathematical definitions for the functions computed by the procedur
 :custom_id: section-1.2.2
 :end:
 
-Another common pattern of computation is called <<i400>> tree recursion.  As an example, consider computing the sequence of Fibonacci numbers, in which each number is the sum of the preceding two:
+Another common pattern of computation is called <<i400>> tree recursion. As an
+example, consider computing the sequence of Fibonacci numbers, in which each
+number is the sum of the preceding two:
 
 0, 1, 1, 2, 3, 4, 8, 13, 21, ...
 
@@ -2012,7 +2014,8 @@ In general, the Fibonacci numbers can be defined by the rule
           \
 #+end_example
 
-We can immediately translate this definition into a recursive procedure for computing Fibonacci numbers:
+We can immediately translate this definition into a recursive procedure for
+computing Fibonacci numbers:
 
 #+begin_src scheme
 (define (fib n)
@@ -2044,9 +2047,21 @@ We can immediately translate this definition into a recursive procedure for comp
    .>.       ..
 #+end_example
 
-Consider the pattern of this computation.  To compute ~(fib 5)~, we compute ~(fib 4)~ and ~(fib 3)~.  To compute ~(fib 4)~, we compute ~(fib 3)~ and ~(fib 2)~.  In general, the evolved process looks like a tree, as shown in [[figure-1.5][Figure 1.5]].  Notice that the branches split into two at each level (except at the bottom); this reflects the fact that the ~fib~ procedure calls itself twice each time it is invoked.
+Consider the pattern of this computation. To compute ~(fib 5)~, we compute ~(fib 4)~
+and ~(fib 3)~. To compute ~(fib 4)~, we compute ~(fib 3)~ and ~(fib 2)~. In general, the
+evolved process looks like a tree, as shown in [[figure-1.5][Figure 1.5]]. Notice that the
+branches split into two at each level (except at the bottom); this reflects the
+fact that the ~fib~ procedure calls itself twice each time it is invoked.
 
-This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation.  Notice in [[figure-1.5][Figure 1.5]] that the entire computation of ~(fib 3)~--almost half the work--is duplicated.  In fact, it is not hard to show that the number of times the procedure will compute ~(fib 1)~ or ~(fib 0)~ (the number of leaves in the above tree, in general) is precisely Fib(n + 1).  To get an idea of how bad this is, one can show that the value of Fib(n) grows exponentially with n.  More precisely (see [[#exercise-1.13][Exercise 1.13]]), Fib(n) is the closest integer to \phi^n /[sqrt](5), where
+This procedure is instructive as a prototypical tree recursion, but it is a
+terrible way to compute Fibonacci numbers because it does so much redundant
+computation. Notice in [[figure-1.5][Figure 1.5]] that the entire computation of ~(fib 3)~--almost
+half the work--is duplicated. In fact, it is not hard to show that the number of
+times the procedure will compute ~(fib 1)~ or ~(fib 0)~ (the number of leaves in the
+above tree, in general) is precisely Fib(n + 1). To get an idea of how bad this
+is, one can show that the value of Fib(n) grows exponentially with n. More
+precisely (see [[#exercise-1.13][Exercise 1.13]]), Fib(n) is the closest integer to \phi^n /[sqrt](5),
+where
 
 #+begin_example
  \phi = (1 + [sqrt]5)/2 ~= 1.6180
@@ -2058,16 +2073,25 @@ is the <<i168>> golden ratio, which satisfies the equation
  \phi^2 = \phi + 1
 #+end_example
 
-Thus, the process uses a number of steps that grows exponentially with the input.  On the other hand, the space required grows only linearly with the input, because we need keep track only of which nodes are above us in the tree at any point in the computation.  In general, the number of steps required by a tree-recursive process will be proportional to the number of nodes in the tree, while the space required will be proportional to the maximum depth of the tree.
+Thus, the process uses a number of steps that grows exponentially with the
+input. On the other hand, the space required grows only linearly with the input,
+because we need keep track only of which nodes are above us in the tree at any
+point in the computation. In general, the number of steps required by a
+tree-recursive process will be proportional to the number of nodes in the tree,
+while the space required will be proportional to the maximum depth of the tree.
 
-We can also formulate an iterative process for computing the Fibonacci numbers.  The idea is to use a pair of integers a and b, initialized to Fib(1) = 1 and Fib(0) = 0, and to repeatedly apply the simultaneous transformations
+We can also formulate an iterative process for computing the Fibonacci numbers.
+The idea is to use a pair of integers a and b, initialized to Fib(1) = 1 and
+Fib(0) = 0, and to repeatedly apply the simultaneous transformations
 
 #+begin_example
  a <- a + b
  b <- a
 #+end_example
 
-It is not hard to show that, after applying this transformation n times, a and b will be equal, respectively, to Fib(n + 1) and Fib(n).  Thus, we can compute Fibonacci numbers iteratively using the procedure
+It is not hard to show that, after applying this transformation n times, a and b
+will be equal, respectively, to Fib(n + 1) and Fib(n). Thus, we can compute
+Fibonacci numbers iteratively using the procedure
 
 #+begin_src scheme
 (define (fib n)
@@ -2079,25 +2103,54 @@ It is not hard to show that, after applying this transformation n times, a and b
       (fib-iter (+ a b) a (- count 1))))
 #+end_src
 
-This second method for computing Fib(n) is a linear iteration.  The difference in number of steps required by the two methods--one linear in n, one growing as fast as Fib(n) itself--is enormous, even for small inputs.
+This second method for computing Fib(n) is a linear iteration. The difference in
+number of steps required by the two methods--one linear in n, one growing as
+fast as Fib(n) itself--is enormous, even for small inputs.
 
-One should not conclude from this that tree-recursive processes are useless.  When we consider processes that operate on hierarchically structured data rather than numbers, we will find that tree recursion is a natural and powerful tool.[fn:32] But even in numerical operations, tree-recursive processes can be useful in helping us to understand and design programs.  For instance, although the first ~fib~ procedure is much less efficient than the second one, it is more straightforward, being little more than a translation into Lisp of the definition of the Fibonacci sequence.  To formulate the iterative algorithm required noticing that the computation could be recast as an iteration with three state variables.
+One should not conclude from this that tree-recursive processes are useless.
+When we consider processes that operate on hierarchically structured data rather
+than numbers, we will find that tree recursion is a natural and powerful
+tool.[fn:32] But even in numerical operations, tree-recursive processes can be
+useful in helping us to understand and design programs. For instance, although
+the first ~fib~ procedure is much less efficient than the second one, it is more
+straightforward, being little more than a translation into Lisp of the
+definition of the Fibonacci sequence. To formulate the iterative algorithm
+required noticing that the computation could be recast as an iteration with
+three state variables.
 
 *Example: Counting change*
 
-It takes only a bit of cleverness to come up with the iterative Fibonacci algorithm.  In contrast, consider the following problem: How many different ways can we make change of $ 1.00, given half-dollars, quarters, dimes, nickels, and pennies?  More generally, can we write a procedure to compute the number of ways to change any given amount of money?
+It takes only a bit of cleverness to come up with the iterative Fibonacci
+algorithm. In contrast, consider the following problem: How many different ways
+can we make change of $ 1.00, given half-dollars, quarters, dimes, nickels, and
+pennies? More generally, can we write a procedure to compute the number of ways
+to change any given amount of money?
 
-This problem has a simple solution as a recursive procedure.  Suppose we think of the types of coins available as arranged in some order.  Then the following relation holds:
+This problem has a simple solution as a recursive procedure. Suppose we think of
+the types of coins available as arranged in some order. Then the following
+relation holds:
 
 The number of ways to change amount a using n kinds of coins equals
 
-- the number of ways to change amount a using all but the first kind of coin, plus
+- the number of ways to change amount a using all but the first kind of coin,
+  plus
 
-- the number of ways to change amount a - d using all n kinds of coins, where d is the denomination of the first kind of coin.
+- the number of ways to change amount a - d using all n kinds of coins, where d
+  is the denomination of the first kind of coin.
 
-To see why this is true, observe that the ways to make change can be divided into two groups: those that do not use any of the first kind of coin, and those that do.  Therefore, the total number of ways to make change for some amount is equal to the number of ways to make change for the amount without using any of the first kind of coin, plus the number of ways to make change assuming that we do use the first kind of coin.  But the latter number is equal to the number of ways to make change for the amount that remains after using a coin of the first kind.
+To see why this is true, observe that the ways to make change can be divided
+into two groups: those that do not use any of the first kind of coin, and those
+that do. Therefore, the total number of ways to make change for some amount is
+equal to the number of ways to make change for the amount without using any of
+the first kind of coin, plus the number of ways to make change assuming that we
+do use the first kind of coin. But the latter number is equal to the number of
+ways to make change for the amount that remains after using a coin of the first
+kind.
 
-Thus, we can recursively reduce the problem of changing a given amount to the problem of changing smaller amounts using fewer kinds of coins.  Consider this reduction rule carefully, and convince yourself that we can use it to describe an algorithm if we specify the following degenerate cases:[fn:33]
+Thus, we can recursively reduce the problem of changing a given amount to the
+problem of changing smaller amounts using fewer kinds of coins. Consider this
+reduction rule carefully, and convince yourself that we can use it to describe
+an algorithm if we specify the following degenerate cases:[fn:33]
 
 - If a is exactly 0, we should count that as 1 way to make change.
 - If a is less than 0, we should count that as 0 ways to make change.
@@ -2126,21 +2179,35 @@ We can easily translate this description into a recursive procedure:
         ((= kinds-of-coins 5) 50)))
 #+end_src
 
-(The ~first-denomination~ procedure takes as input the number of kinds of coins available and returns the denomination of the first kind.  Here we are thinking of the coins as arranged in order from largest to smallest, but any order would do as well.)  We can now answer our original question about changing a dollar:
+(The ~first-denomination~ procedure takes as input the number of kinds of coins
+available and returns the denomination of the first kind. Here we are thinking
+of the coins as arranged in order from largest to smallest, but any order would
+do as well.) We can now answer our original question about changing a dollar:
 
 #+begin_src scheme
 (count-change 100)
 292
 #+end_src
 
-~count-change~ generates a tree-recursive process with redundancies similar to those in our first implementation of ~fib~.  (It will take quite a while for that 292 to be computed.)  On the other hand, it is not obvious how to design a better algorithm for computing the result, and we leave this problem as a challenge.  The observation that a tree-recursive process may be highly inefficient but often easy to specify and understand has led people to propose that one could get the best of both worlds by designing a "smart compiler" that could transform tree-recursive procedures into more efficient procedures that compute the same result.[fn:34]
+~count-change~ generates a tree-recursive process with redundancies similar to
+those in our first implementation of ~fib~. (It will take quite a while for that
+292 to be computed.) On the other hand, it is not obvious how to design a better
+algorithm for computing the result, and we leave this problem as a challenge.
+The observation that a tree-recursive process may be highly inefficient but
+often easy to specify and understand has led people to propose that one could
+get the best of both worlds by designing a "smart compiler" that could transform
+tree-recursive procedures into more efficient procedures that compute the same
+result.[fn:34]
 
 **** Exercise 1.11
 :properties:
 :custom_id: exercise-1.11
 :end:
 
-A function f is defined by the rule that f(n) = n if n<3 and f(n) = f(n - 1) + 2f(n - 2) + 3f(n - 3) if n>= 3.  Write a procedure that computes f by means of a recursive process.  Write a procedure that computes f by means of an iterative process.
+A function f is defined by the rule that f(n) = n if n<3 and f(n) = f(n - 1) +
+2f(n - 2) + 3f(n - 3) if n>= 3. Write a procedure that computes f by means of a
+recursive process. Write a procedure that computes f by means of an iterative
+process.
 
 **** Exercise 1.12
 :properties:
@@ -2157,49 +2224,94 @@ The following pattern of numbers is called <<i281>> Pascal's triangle.
  1   4   6   4   1
 #+end_example
 
-The numbers at the edge of the triangle are all 1, and each number inside the triangle is the sum of the two numbers above it.[fn:35] Write a procedure that computes elements of Pascal's triangle by means of a recursive process.
+The numbers at the edge of the triangle are all 1, and each number inside the
+triangle is the sum of the two numbers above it.[fn:35] Write a procedure that
+computes elements of Pascal's triangle by means of a recursive process.
 
 **** Exercise 1.13
 :properties:
 :custom_id: exercise-1.13
 :end:
 
-Prove that Fib(n) is the closest integer to \phi^n/[sqrt](5), where \phi = (1 + [sqrt](5))/2.  Hint: Let [illegiblesymbol] = (1 - [sqrt](5))/2.  Use induction and the definition of the Fibonacci numbers (see section [[#section-1.2.2][1.2.2]]) to prove that Fib(n) = (\phi^n - [illegiblesymbol]^n)/[sqrt](5).
+Prove that Fib(n) is the closest integer to \phi^n/[sqrt](5), where \phi = (1 +
+[sqrt](5))/2. Hint: Let [illegiblesymbol] = (1 - [sqrt](5))/2. Use induction and
+the definition of the Fibonacci numbers (see section [[#section-1.2.2][1.2.2]]) to prove that Fib(n)
+= (\phi^n - [illegiblesymbol]^n)/[sqrt](5).
 
 *** 1.2.3 Orders of Growth
 :properties:
 :custom_id: section-1.2.3
 :end:
 
-The previous examples illustrate that processes can differ considerably in the rates at which they consume computational resources.  One convenient way to describe this difference is to use the notion of <<i273>> order of growth to obtain a gross measure of the resources required by a process as the inputs become larger.
+The previous examples illustrate that processes can differ considerably in the
+rates at which they consume computational resources. One convenient way to
+describe this difference is to use the notion of <<i273>> order of growth to
+obtain a gross measure of the resources required by a process as the inputs
+become larger.
 
-Let n be a parameter that measures the size of the problem, and let R(n) be the amount of resources the process requires for a problem of size n.  In our previous examples we took n to be the number for which a given function is to be computed, but there are other possibilities.  For instance, if our goal is to compute an approximation to the square root of a number, we might take n to be the number of digits accuracy required.  For matrix multiplication we might take n to be the number of rows in the matrices.  In general there are a number of properties of the problem with respect to which it will be desirable to analyze a given process.  Similarly, R(n) might measure the number of internal storage registers used, the number of elementary machine operations performed, and so on.  In computers that do only a fixed number of operations at a time, the time required will be proportional to the number of elementary machine operations performed.
+Let n be a parameter that measures the size of the problem, and let R(n) be the
+amount of resources the process requires for a problem of size n. In our
+previous examples we took n to be the number for which a given function is to be
+computed, but there are other possibilities. For instance, if our goal is to
+compute an approximation to the square root of a number, we might take n to be
+the number of digits accuracy required. For matrix multiplication we might take
+n to be the number of rows in the matrices. In general there are a number of
+properties of the problem with respect to which it will be desirable to analyze
+a given process. Similarly, R(n) might measure the number of internal storage
+registers used, the number of elementary machine operations performed, and so
+on. In computers that do only a fixed number of operations at a time, the time
+required will be proportional to the number of elementary machine operations
+performed.
 
-We say that R(n) has order of growth \theta(f(n)), written R(n) = \theta(f(n)) (pronounced "theta of f(n)"), if there are positive constants k_1 and k_2 independent of n such that
+We say that R(n) has order of growth \theta(f(n)), written R(n) = \theta(f(n)) (pronounced
+"theta of f(n)"), if there are positive constants k_1 and k_2 independent of n
+such that
 
 #+begin_example
  k_1 f(n) <= R(n) <= k_2 f(n)
 #+end_example
 
-for any sufficiently large value of n.  (In other words, for large n, the value R(n) is sandwiched between k_1f(n) and k_2f(n).)
+for any sufficiently large value of n. (In other words, for large n, the value
+R(n) is sandwiched between k_1f(n) and k_2f(n).)
 
-For instance, with the linear recursive process for computing factorial described in section [[#section-1.2.1][1.2.1]] the number of steps grows proportionally to the input n.  Thus, the steps required for this process grows as \theta(n).  We also saw that the space required grows as \theta(n).  For the iterative factorial, the number of steps is still \theta(n) but the space is \theta(1)--that is, constant.[fn:36] The tree-recursive Fibonacci computation requires \theta(\phi^n) steps and space \theta(n), where \phi is the golden ratio described in section [[#section-1.2.2][1.2.2]].
+For instance, with the linear recursive process for computing factorial
+described in section [[#section-1.2.1][1.2.1]] the number of steps grows proportionally to the
+input n. Thus, the steps required for this process grows as \theta(n). We also saw
+that the space required grows as \theta(n). For the iterative factorial, the number
+of steps is still \theta(n) but the space is \theta(1)--that is, constant.[fn:36] The
+tree-recursive Fibonacci computation requires \theta(\phi^n) steps and space \theta(n), where
+\phi is the golden ratio described in section [[#section-1.2.2][1.2.2]].
 
-Orders of growth provide only a crude description of the behavior of a process.  For example, a process requiring n^2 steps and a process requiring 1000n^2 steps and a process requiring 3n^2 + 10n + 17 steps all have \theta(n^2) order of growth.  On the other hand, order of growth provides a useful indication of how we may expect the behavior of the process to change as we change the size of the problem.  For a \theta(n) (linear) process, doubling the size will roughly double the amount of resources used.  For an exponential process, each increment in problem size will multiply the resource utilization by a constant factor.  In the remainder of section [[#section-1.2][1.2]] we will examine two algorithms whose order of growth is logarithmic, so that doubling the problem size increases the resource requirement by a constant amount.
+Orders of growth provide only a crude description of the behavior of a process.
+For example, a process requiring n^2 steps and a process requiring 1000n^2 steps
+and a process requiring 3n^2 + 10n + 17 steps all have \theta(n^2) order of growth.
+On the other hand, order of growth provides a useful indication of how we may
+expect the behavior of the process to change as we change the size of the
+problem. For a \theta(n) (linear) process, doubling the size will roughly double the
+amount of resources used. For an exponential process, each increment in problem
+size will multiply the resource utilization by a constant factor. In the
+remainder of section [[#section-1.2][1.2]] we will examine two algorithms whose order of growth is
+logarithmic, so that doubling the problem size increases the resource
+requirement by a constant amount.
 
 **** Exercise 1.14
 :properties:
 :custom_id: exercise-1.14
 :end:
 
-Draw the tree illustrating the process generated by the ~count-change~ procedure of section [[#section-1.2.2][1.2.2]] in making change for 11 cents.  What are the orders of growth of the space and number of steps used by this process as the amount to be changed increases?
+Draw the tree illustrating the process generated by the ~count-change~ procedure
+of section [[#section-1.2.2][1.2.2]] in making change for 11 cents. What are the orders of growth of
+the space and number of steps used by this process as the amount to be changed
+increases?
 
 **** Exercise 1.15
 :properties:
 :custom_id: exercise-1.15
 :end:
 
-The sine of an angle (specified in radians) can be computed by making use of the approximation ~sin~ xapprox x if x is sufficiently small, and the trigonometric identity
+The sine of an angle (specified in radians) can be computed by making use of the
+approximation ~sin~ xapprox x if x is sufficiently small, and the trigonometric
+identity
 
 #+begin_example
                 x             x
@@ -2207,7 +2319,9 @@ The sine of an angle (specified in radians) can be computed by making use of the
                 3             3
 #+end_example
 
-to reduce the size of the argument of ~sin~.  (For purposes of this exercise an angle is considered "sufficiently small" if its magnitude is not greater than 0.1 radians.)  These ideas are incorporated in the following procedures:
+to reduce the size of the argument of ~sin~. (For purposes of this exercise an
+angle is considered "sufficiently small" if its magnitude is not greater than
+0.1 radians.) These ideas are incorporated in the following procedures:
 
 #+begin_src scheme
 (define (cube x) (* x x x))
@@ -2222,14 +2336,18 @@ to reduce the size of the argument of ~sin~.  (For purposes of this exercise an 
 
 a. How many times is the procedure ~p~ applied when ~(sine 12.15)~ is evaluated?
 
-b. What is the order of growth in space and number of steps (as a function of a) used by the process generated by the ~sine~ procedure when ~(sine a)~ is evaluated?
+b. What is the order of growth in space and number of steps (as a function of a)
+   used by the process generated by the ~sine~ procedure when ~(sine a)~ is
+   evaluated?
 
 *** 1.2.4 Exponentiation
 :properties:
 :custom_id: section-1.2.4
 :end:
 
-Consider the problem of computing the exponential of a given number.  We would like a procedure that takes as arguments a base b and a positive integer exponent n and computes b^n.  One way to do this is via the recursive definition
+Consider the problem of computing the exponential of a given number. We would
+like a procedure that takes as arguments a base b and a positive integer
+exponent n and computes b^n. One way to do this is via the recursive definition
 
 #+begin_example
  b^n = b * b^(n - 1)
@@ -2245,7 +2363,8 @@ which translates readily into the procedure
       (* b (expt b (- n 1)))))
 #+end_src
 
-This is a linear recursive process, which requires \theta(n) steps and \theta(n) space.  Just as with factorial, we can readily formulate an equivalent linear iteration:
+This is a linear recursive process, which requires \theta(n) steps and \theta(n) space.
+Just as with factorial, we can readily formulate an equivalent linear iteration:
 
 #+begin_src scheme
 (define (expt b n)
@@ -2261,7 +2380,8 @@ This is a linear recursive process, which requires \theta(n) steps and \theta(n)
 
 This version requires \theta(n) steps and \theta(1) space.
 
-We can compute exponentials in fewer steps by using successive squaring.  For instance, rather than computing b^8 as
+We can compute exponentials in fewer steps by using successive squaring. For
+instance, rather than computing b^8 as
 
 #+begin_example
  b * (b * (b * (b * (b * (b * (b * b))))))
@@ -2275,7 +2395,9 @@ we can compute it using three multiplications:
  b^8 = b^4 * b^4
 #+end_example
 
-This method works fine for exponents that are powers of 2.  We can also take advantage of successive squaring in computing exponentials in general if we use the rule
+This method works fine for exponents that are powers of 2. We can also take
+advantage of successive squaring in computing exponentials in general if we use
+the rule
 
 #+begin_example
  b^n = (b^(b/2))^2    if n is even
@@ -2291,30 +2413,56 @@ We can express this method as a procedure:
         (else (* b (fast-expt b (- n 1))))))
 #+end_src
 
-where the predicate to test whether an integer is even is defined in terms of the primitive procedure ~remainder~ by
+where the predicate to test whether an integer is even is defined in terms of
+the primitive procedure ~remainder~ by
 
 #+begin_src scheme
 (define (even? n)
   (= (remainder n 2) 0))
 #+end_src
 
-The process evolved by ~fast-expt~ grows logarithmically with n in both space and number of steps.  To see this, observe that computing b^(2n) using ~fast-expt~ requires only one more multiplication than computing b^n.  The size of the exponent we can compute therefore doubles (approximately) with every new multiplication we are allowed.  Thus, the number of multiplications required for an exponent of n grows about as fast as the logarithm of n to the base 2.  The process has \theta(log n) growth.[fn:37]
+The process evolved by ~fast-expt~ grows logarithmically with n in both space and
+number of steps. To see this, observe that computing b^(2n) using ~fast-expt~
+requires only one more multiplication than computing b^n. The size of the
+exponent we can compute therefore doubles (approximately) with every new
+multiplication we are allowed. Thus, the number of multiplications required for
+an exponent of n grows about as fast as the logarithm of n to the base 2. The
+process has \theta(log n) growth.[fn:37]
 
-The difference between \theta(log n) growth and \theta(n) growth becomes striking as n becomes large.  For example, ~fast-expt~ for n = 1000 requires only 14 multiplications.[fn:38] It is also possible to use the idea of successive squaring to devise an iterative algorithm that computes exponentials with a logarithmic number of steps (see [[#exercise-1.16][Exercise 1.16]]), although, as is often the case with iterative algorithms, this is not written down so straightforwardly as the recursive algorithm.[fn:39]
+The difference between \theta(log n) growth and \theta(n) growth becomes striking as n
+becomes large. For example, ~fast-expt~ for n = 1000 requires only 14
+multiplications.[fn:38] It is also possible to use the idea of successive
+squaring to devise an iterative algorithm that computes exponentials with a
+logarithmic number of steps (see [[#exercise-1.16][Exercise 1.16]]), although, as is often the case
+with iterative algorithms, this is not written down so straightforwardly as the
+recursive algorithm.[fn:39]
 
 **** Exercise 1.16
 :properties:
 :custom_id: exercise-1.16
 :end:
 
-Design a procedure that evolves an iterative exponentiation process that uses successive squaring and uses a logarithmic number of steps, as does ~fast-expt~.  (Hint: Using the observation that (b^(n/2))^2 = (b^2)^(n/2), keep, along with the exponent n and the base b, an additional state variable a, and define the state transformation in such a way that the product a b^n is unchanged from state to state.  At the beginning of the process a is taken to be 1, and the answer is given by the value of a at the end of the process.  In general, the technique of defining an <<i196>> invariant quantity that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms.)
+Design a procedure that evolves an iterative exponentiation process that uses
+successive squaring and uses a logarithmic number of steps, as does ~fast-expt~.
+(Hint: Using the observation that (b^(n/2))^2 = (b^2)^(n/2), keep, along with
+the exponent n and the base b, an additional state variable a, and define the
+state transformation in such a way that the product a b^n is unchanged from
+state to state. At the beginning of the process a is taken to be 1, and the
+answer is given by the value of a at the end of the process. In general, the
+technique of defining an <<i196>> invariant quantity that remains unchanged from
+state to state is a powerful way to think about the design of iterative
+algorithms.)
 
 **** Exercise 1.17
 :properties:
 :custom_id: exercise-1.17
 :end:
 
-The exponentiation algorithms in this section are based on performing exponentiation by means of repeated multiplication.  In a similar way, one can perform integer multiplication by means of repeated addition.  The following multiplication procedure (in which it is assumed that our language can only add, not multiply) is analogous to the ~expt~ procedure:
+The exponentiation algorithms in this section are based on performing
+exponentiation by means of repeated multiplication. In a similar way, one can
+perform integer multiplication by means of repeated addition. The following
+multiplication procedure (in which it is assumed that our language can only add,
+not multiply) is analogous to the ~expt~ procedure:
 
 #+begin_src scheme
 (define (* a b)
@@ -2323,21 +2471,41 @@ The exponentiation algorithms in this section are based on performing exponentia
       (+ a (* a (- b 1)))))
 #+end_src
 
-This algorithm takes a number of steps that is linear in ~b~.  Now suppose we include, together with addition, operations ~double~, which doubles an integer, and ~halve~, which divides an (even) integer by 2.  Using these, design a multiplication procedure analogous to ~fast-expt~ that uses a logarithmic number of steps.
+This algorithm takes a number of steps that is linear in ~b~. Now suppose we
+include, together with addition, operations ~double~, which doubles an integer,
+and ~halve~, which divides an (even) integer by 2. Using these, design a
+multiplication procedure analogous to ~fast-expt~ that uses a logarithmic number
+of steps.
 
 **** Exercise 1.18
 :properties:
 :custom_id: exercise-1.18
 :end:
 
-Using the results of [[#exercise-1.16][Exercise 1.16]] and [[#exercise-1.17][Exercise 1.17]], devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling, and halving and uses a logarithmic number of steps.[fn:40]
+Using the results of [[#exercise-1.16][Exercise 1.16]] and [[#exercise-1.17][Exercise 1.17]], devise a procedure that
+generates an iterative process for multiplying two integers in terms of adding,
+doubling, and halving and uses a logarithmic number of steps.[fn:40]
 
 **** Exercise 1.19
 :properties:
 :custom_id: exercise-1.19
 :end:
 
-There is a clever algorithm for computing the Fibonacci numbers in a logarithmic number of steps.  Recall the transformation of the state variables a and b in the ~fib-iter~ process of section [[#section-1.2.2][1.2.2]]: a <- a + b and b <- a.  Call this transformation T, and observe that applying T over and over again n times, starting with 1 and 0, produces the pair Fib(n + 1) and Fib(n).  In other words, the Fibonacci numbers are produced by applying T^n, the nth power of the transformation T, starting with the pair (1,0).  Now consider T to be the special case of p = 0 and q = 1 in a family of transformations T_(pq), where T_(pq) transforms the pair (a,b) according to a <- bq + aq + ap and b <- bp + aq.  Show that if we apply such a transformation T_(pq) twice, the effect is the same as using a single transformation T_(p'q') of the same form, and compute p' and q' in terms of p and q.  This gives us an explicit way to square these transformations, and thus we can compute T^n using successive squaring, as in the ~fast-expt~ procedure.  Put this all together to complete the following procedure, which runs in a logarithmic number of steps:[fn:41]
+There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
+number of steps. Recall the transformation of the state variables a and b in the
+~fib-iter~ process of section [[#section-1.2.2][1.2.2]]: a <- a + b and b <- a. Call this
+transformation T, and observe that applying T over and over again n times,
+starting with 1 and 0, produces the pair Fib(n + 1) and Fib(n). In other words,
+the Fibonacci numbers are produced by applying T^n, the nth power of the
+transformation T, starting with the pair (1,0). Now consider T to be the special
+case of p = 0 and q = 1 in a family of transformations T_(pq), where T_(pq)
+transforms the pair (a,b) according to a <- bq + aq + ap and b <- bp + aq. Show
+that if we apply such a transformation T_(pq) twice, the effect is the same as
+using a single transformation T_(p'q') of the same form, and compute p' and q'
+in terms of p and q. This gives us an explicit way to square these
+transformations, and thus we can compute T^n using successive squaring, as in
+the ~fast-expt~ procedure. Put this all together to complete the following
+procedure, which runs in a logarithmic number of steps:[fn:41]
 
 #+begin_src scheme
 (define (fib n)
@@ -2363,15 +2531,27 @@ There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 :custom_id: section-1.2.5
 :end:
 
-The greatest common divisor (GCD) of two integers a and b is defined to be the largest integer that divides both a and b with no remainder.  For example, the GCD of 16 and 28 is 4.  In [[#section-2][Chapter 2]], when we investigate how to implement rational-number arithmetic, we will need to be able to compute GCDs in order to reduce rational numbers to lowest terms.  (To reduce a rational number to lowest terms, we must divide both the numerator and the denominator by their GCD.  For example, 16/28 reduces to 4/7.)  One way to find the GCD of two integers is to factor them and search for common factors, but there is a famous algorithm that is much more efficient.
+The greatest common divisor (GCD) of two integers a and b is defined to be the
+largest integer that divides both a and b with no remainder. For example, the
+GCD of 16 and 28 is 4. In [[#section-2][Chapter 2]], when we investigate how to implement
+rational-number arithmetic, we will need to be able to compute GCDs in order to
+reduce rational numbers to lowest terms. (To reduce a rational number to lowest
+terms, we must divide both the numerator and the denominator by their GCD. For
+example, 16/28 reduces to 4/7.) One way to find the GCD of two integers is to
+factor them and search for common factors, but there is a famous algorithm that
+is much more efficient.
 
-The idea of the algorithm is based on the observation that, if r is the remainder when a is divided by b, then the common divisors of a and b are precisely the same as the common divisors of b and r.  Thus, we can use the equation
+The idea of the algorithm is based on the observation that, if r is the
+remainder when a is divided by b, then the common divisors of a and b are
+precisely the same as the common divisors of b and r. Thus, we can use the
+equation
 
 #+begin_example
  GCD(a,b) = GCD(b,r)
 #+end_example
 
-to successively reduce the problem of computing a GCD to the problem of computing the GCD of smaller and smaller pairs of integers.  For example,
+to successively reduce the problem of computing a GCD to the problem of
+computing the GCD of smaller and smaller pairs of integers. For example,
 
 #+begin_example
  GCD(206,40) = GCD(40,6)
@@ -2381,7 +2561,11 @@ to successively reduce the problem of computing a GCD to the problem of computin
              = 2
 #+end_example
 
-reduces GCD(206,40) to GCD(2,0), which is 2.  It is possible to show that starting with any two positive integers and performing repeated reductions will always eventually produce a pair where the second number is 0.  Then the GCD is the other number in the pair.  This method for computing the GCD is known as <<i126>> Euclid's Algorithm.[fn:42]
+reduces GCD(206,40) to GCD(2,0), which is 2. It is possible to show that
+starting with any two positive integers and performing repeated reductions will
+always eventually produce a pair where the second number is 0. Then the GCD is
+the other number in the pair. This method for computing the GCD is known as
+<<i126>> Euclid's Algorithm.[fn:42]
 
 It is easy to express Euclid's Algorithm as a procedure:
 
@@ -2392,31 +2576,55 @@ It is easy to express Euclid's Algorithm as a procedure:
       (gcd b (remainder a b))))
 #+end_src
 
-This generates an iterative process, whose number of steps grows as the logarithm of the numbers involved.
+This generates an iterative process, whose number of steps grows as the
+logarithm of the numbers involved.
 
-The fact that the number of steps required by Euclid's Algorithm has logarithmic growth bears an interesting relation to the Fibonacci numbers:
+The fact that the number of steps required by Euclid's Algorithm has logarithmic
+growth bears an interesting relation to the Fibonacci numbers:
 
-*Lame's Theorem:* If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.[fn:43]
+*Lame's Theorem:* If Euclid's Algorithm requires k steps to compute the GCD of
+some pair, then the smaller number in the pair must be greater than or equal to
+the kth Fibonacci number.[fn:43]
 
-We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm.  Let n be the smaller of the two inputs to the procedure.  If the process takes k steps, then we must have n>= Fib(k) approx \phi^k/[sqrt](5).  Therefore the number of steps k grows as the logarithm (to the base \phi) of n.  Hence, the order of growth is \theta(log n).
+We can use this theorem to get an order-of-growth estimate for Euclid's
+Algorithm. Let n be the smaller of the two inputs to the procedure. If the
+process takes k steps, then we must have n>= Fib(k) approx \phi^k/[sqrt](5).
+Therefore the number of steps k grows as the logarithm (to the base \phi) of n.
+Hence, the order of growth is \theta(log n).
 
 **** Exercise 1.20
 :properties:
 :custom_id: exercise-1.20
 :end:
 
-The process that a procedure generates is of course dependent on the rules used by the interpreter.  As an example, consider the iterative ~gcd~ procedure given above.  Suppose we were to interpret this procedure using normal-order evaluation, as discussed in section [[#section-1.1.5][1.1.5]].  (The normal-order-evaluation rule for ~if~ is described in [[#exercise-1.5][Exercise 1.5]].)  Using the substitution method (for normal order), illustrate the process generated in evaluating ~(gcd 206 40)~ and indicate the ~remainder~ operations that are actually performed.  How many ~remainder~ operations are actually performed in the normal-order evaluation of ~(gcd 206 40)~?  In the applicative-order evaluation?
+The process that a procedure generates is of course dependent on the rules used
+by the interpreter. As an example, consider the iterative ~gcd~ procedure given
+above. Suppose we were to interpret this procedure using normal-order
+evaluation, as discussed in section [[#section-1.1.5][1.1.5]]. (The normal-order-evaluation rule for
+~if~ is described in [[#exercise-1.5][Exercise 1.5]].) Using the substitution method (for normal
+order), illustrate the process generated in evaluating ~(gcd 206 40)~ and indicate
+the ~remainder~ operations that are actually performed. How many ~remainder~
+operations are actually performed in the normal-order evaluation of ~(gcd 206
+40)~? In the applicative-order evaluation?
 
 *** 1.2.6 Example: Testing for Primality
 :properties:
 :custom_id: section-1.2.6
 :end:
 
-This section describes two methods for checking the primality of an integer n, one with order of growth \theta([sqrt](n)), and a "probabilistic" algorithm with order of growth \theta(log n).  The exercises at the end of this section suggest programming projects based on these algorithms.
+This section describes two methods for checking the primality of an integer n,
+one with order of growth \theta([sqrt](n)), and a "probabilistic" algorithm with
+order of growth \theta(log n). The exercises at the end of this section suggest
+programming projects based on these algorithms.
 
 *Searching for divisors*
 
-Since ancient times, mathematicians have been fascinated by problems concerning prime numbers, and many people have worked on the problem of determining ways to test if numbers are prime.  One way to test if a number is prime is to find the number's divisors.  The following program finds the smallest integral divisor (greater than 1) of a given number n.  It does this in a straightforward way, by testing n for divisibility by successive integers starting with 2.
+Since ancient times, mathematicians have been fascinated by problems concerning
+prime numbers, and many people have worked on the problem of determining ways to
+test if numbers are prime. One way to test if a number is prime is to find the
+number's divisors. The following program finds the smallest integral divisor
+(greater than 1) of a given number n. It does this in a straightforward way, by
+testing n for divisibility by successive integers starting with 2.
 
 #+begin_src scheme
 (define (smallest-divisor n)
@@ -2431,26 +2639,45 @@ Since ancient times, mathematicians have been fascinated by problems concerning 
   (= (remainder b a) 0))
 #+end_src
 
-We can test whether a number is prime as follows: n is prime if and only if n is its own smallest divisor.
+We can test whether a number is prime as follows: n is prime if and only if n is
+its own smallest divisor.
 
 #+begin_src scheme
 (define (prime? n)
   (= n (smallest-divisor n)))
 #+end_src
 
-The end test for ~find-divisor~ is based on the fact that if n is not prime it must have a divisor less than or equal to [sqrt](n).[fn:44] This means that the algorithm need only test divisors between 1 and [sqrt](n).  Consequently, the number of steps required to identify n as prime will have order of growth \theta([sqrt](n)).
+The end test for ~find-divisor~ is based on the fact that if n is not prime it
+must have a divisor less than or equal to [sqrt](n).[fn:44] This means that the
+algorithm need only test divisors between 1 and [sqrt](n). Consequently, the
+number of steps required to identify n as prime will have order of growth
+\theta([sqrt](n)).
 
 *The Fermat test*
 
-The \theta(log n) primality test is based on a result from number theory known as Fermat's Little Theorem.[fn:45]
+The \theta(log n) primality test is based on a result from number theory known as
+Fermat's Little Theorem.[fn:45]
 
-*Fermat's Little Theorem:* If n is a prime number and a is any positive integer less than n, then a raised to the nth power is congruent to a modulo n.
+*Fermat's Little Theorem:* If n is a prime number and a is any positive integer
+less than n, then a raised to the nth power is congruent to a modulo n.
 
-(Two numbers are said to be <<i79>> congruent modulo n if they both have the same remainder when divided by n.  The remainder of a number a when divided by n is also referred to as the <<i334>> remainder of a <<i240>> modulo n, or simply as a <<i241>> modulo n.)
+(Two numbers are said to be <<i79>> congruent modulo n if they both have the
+same remainder when divided by n. The remainder of a number a when divided by n
+is also referred to as the <<i334>> remainder of a <<i240>> modulo n, or simply
+as a <<i241>> modulo n.)
 
-If n is not prime, then, in general, most of the numbers a< n will not satisfy the above relation.  This leads to the following algorithm for testing primality: Given a number n, pick a random number a < n and compute the remainder of a^n modulo n.  If the result is not equal to a, then n is certainly not prime.  If it is a, then chances are good that n is prime.  Now pick another random number a and test it with the same method.  If it also satisfies the equation, then we can be even more confident that n is prime.  By trying more and more values of a, we can increase our confidence in the result.  This algorithm is known as the Fermat test.
+If n is not prime, then, in general, most of the numbers a< n will not satisfy
+the above relation. This leads to the following algorithm for testing primality:
+Given a number n, pick a random number a < n and compute the remainder of a^n
+modulo n. If the result is not equal to a, then n is certainly not prime. If it
+is a, then chances are good that n is prime. Now pick another random number a
+and test it with the same method. If it also satisfies the equation, then we can
+be even more confident that n is prime. By trying more and more values of a, we
+can increase our confidence in the result. This algorithm is known as the Fermat
+test.
 
-To implement the Fermat test, we need a procedure that computes the exponential of a number modulo another number:
+To implement the Fermat test, we need a procedure that computes the exponential
+of a number modulo another number:
 
 #+begin_src scheme
 (define (expmod base exp m)
@@ -2463,9 +2690,16 @@ To implement the Fermat test, we need a procedure that computes the exponential 
                     m))))
 #+end_src
 
-This is very similar to the ~fast-expt~ procedure of section [[#section-1.2.4][1.2.4]].  It uses successive squaring, so that the number of steps grows logarithmically with the exponent.[fn:46]
+This is very similar to the ~fast-expt~ procedure of section [[#section-1.2.4][1.2.4]]. It uses
+successive squaring, so that the number of steps grows logarithmically with the
+exponent.[fn:46]
 
-The Fermat test is performed by choosing at random a number a between 1 and n - 1 inclusive and checking whether the remainder modulo n of the nth power of a is equal to a.  The random number a is chosen using the procedure ~random~, which we assume is included as a primitive in Scheme.  ~random~ returns a nonnegative integer less than its integer input.  Hence, to obtain a random number between 1 and n - 1, we call ~random~ with an input of n - 1 and add 1 to the result:
+The Fermat test is performed by choosing at random a number a between 1 and n -
+1 inclusive and checking whether the remainder modulo n of the nth power of a is
+equal to a. The random number a is chosen using the procedure ~random~, which we
+assume is included as a primitive in Scheme. ~random~ returns a nonnegative
+integer less than its integer input. Hence, to obtain a random number between 1
+and n - 1, we call ~random~ with an input of n - 1 and add 1 to the result:
 
 #+begin_src scheme
 (define (fermat-test n)
@@ -2474,7 +2708,9 @@ The Fermat test is performed by choosing at random a number a between 1 and n - 
   (try-it (+ 1 (random (- n 1)))))
 #+end_src
 
-The following procedure runs the test a given number of times, as specified by a parameter.  Its value is true if the test succeeds every time, and false otherwise.
+The following procedure runs the test a given number of times, as specified by a
+parameter. Its value is true if the test succeeds every time, and false
+otherwise.
 
 #+begin_src scheme
 (define (fast-prime? n times)
@@ -2485,27 +2721,56 @@ The following procedure runs the test a given number of times, as specified by a
 
 *Probabilistic methods*
 
-The Fermat test differs in character from most familiar algorithms, in which one computes an answer that is guaranteed to be correct.  Here, the answer obtained is only probably correct.  More precisely, if n ever fails the Fermat test, we can be certain that n is not prime.  But the fact that n passes the test, while an extremely strong indication, is still not a guarantee that n is prime.  What we would like to say is that for any number n, if we perform the test enough times and find that n always passes the test, then the probability of error in our primality test can be made as small as we like.
+The Fermat test differs in character from most familiar algorithms, in which one
+computes an answer that is guaranteed to be correct. Here, the answer obtained
+is only probably correct. More precisely, if n ever fails the Fermat test, we
+can be certain that n is not prime. But the fact that n passes the test, while
+an extremely strong indication, is still not a guarantee that n is prime. What
+we would like to say is that for any number n, if we perform the test enough
+times and find that n always passes the test, then the probability of error in
+our primality test can be made as small as we like.
 
-Unfortunately, this assertion is not quite correct.  There do exist numbers that fool the Fermat test: numbers n that are not prime and yet have the property that a^n is congruent to a modulo n for all integers a < n.  Such numbers are extremely rare, so the Fermat test is quite reliable in practice.[fn:47]
+Unfortunately, this assertion is not quite correct. There do exist numbers that
+fool the Fermat test: numbers n that are not prime and yet have the property
+that a^n is congruent to a modulo n for all integers a < n. Such numbers are
+extremely rare, so the Fermat test is quite reliable in practice.[fn:47]
 
-There are variations of the Fermat test that cannot be fooled.  In these tests, as with the Fermat method, one tests the primality of an integer n by choosing a random integer a<n and checking some condition that depends upon n and a.  (See [[#exercise-1.28][Exercise 1.28]] for an example of such a test.)  On the other hand, in contrast to the Fermat test, one can prove that, for any n, the condition does not hold for most of the integers a<n unless n is prime.  Thus, if n passes the test for some random choice of a, the chances are better than even that n is prime.  If n passes the test for two random choices of a, the chances are better than 3 out of 4 that n is prime.  By running the test with more and more randomly chosen values of a we can make the probability of error as small as we like.
+There are variations of the Fermat test that cannot be fooled. In these tests,
+as with the Fermat method, one tests the primality of an integer n by choosing a
+random integer a<n and checking some condition that depends upon n and a. (See
+[[#exercise-1.28][Exercise 1.28]] for an example of such a test.) On the other hand, in contrast to
+the Fermat test, one can prove that, for any n, the condition does not hold for
+most of the integers a<n unless n is prime. Thus, if n passes the test for some
+random choice of a, the chances are better than even that n is prime. If n
+passes the test for two random choices of a, the chances are better than 3 out
+of 4 that n is prime. By running the test with more and more randomly chosen
+values of a we can make the probability of error as small as we like.
 
-The existence of tests for which one can prove that the chance of error becomes arbitrarily small has sparked interest in algorithms of this type, which have come to be known as <<i298>> probabilistic algorithms.  There is a great deal of research activity in this area, and probabilistic algorithms have been fruitfully applied to many fields.[fn:48]
+The existence of tests for which one can prove that the chance of error becomes
+arbitrarily small has sparked interest in algorithms of this type, which have
+come to be known as <<i298>> probabilistic algorithms. There is a great deal of
+research activity in this area, and probabilistic algorithms have been
+fruitfully applied to many fields.[fn:48]
 
 **** Exercise 1.21
 :properties:
 :custom_id: exercise-1.21
 :end:
 
-Use the ~smallest-divisor~ procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.
+Use the ~smallest-divisor~ procedure to find the smallest divisor of each of the
+following numbers: 199, 1999, 19999.
 
 **** Exercise 1.22
 :properties:
 :custom_id: exercise-1.22
 :end:
 
-Most Lisp implementations include a primitive called ~runtime~ that returns an integer that specifies the amount of time the system has been running (measured, for example, in microseconds).  The following ~timed-prime-test~ procedure, when called with an integer n, prints n and checks to see if n is prime.  If n is prime, the procedure prints three asterisks followed by the amount of time used in performing the test.
+Most Lisp implementations include a primitive called ~runtime~ that returns an
+integer that specifies the amount of time the system has been running (measured,
+for example, in microseconds). The following ~timed-prime-test~ procedure, when
+called with an integer n, prints n and checks to see if n is prime. If n is
+prime, the procedure prints three asterisks followed by the amount of time used
+in performing the test.
 
 #+begin_src scheme
 (define (timed-prime-test n)
@@ -2522,42 +2787,74 @@ Most Lisp implementations include a primitive called ~runtime~ that returns an i
   (display elapsed-time))
 #+end_src
 
-Using this procedure, write a procedure ~search-for-primes~ that checks the primality of consecutive odd integers in a specified range.  Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000.  Note the time needed to test each prime.  Since the testing algorithm has order of growth of \theta([sqrt](n)), you should expect that testing for primes around 10,000 should take about [sqrt](10) times as long as testing for primes around 1000.  Do your timing data bear this out?  How well do the data for 100,000 and 1,000,000 support the [sqrt](n) prediction?  Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
+Using this procedure, write a procedure ~search-for-primes~ that checks the
+primality of consecutive odd integers in a specified range. Use your procedure
+to find the three smallest primes larger than 1000; larger than 10,000; larger
+than 100,000; larger than 1,000,000. Note the time needed to test each prime.
+Since the testing algorithm has order of growth of \theta([sqrt](n)), you should
+expect that testing for primes around 10,000 should take about [sqrt](10) times
+as long as testing for primes around 1000. Do your timing data bear this out?
+How well do the data for 100,000 and 1,000,000 support the [sqrt](n) prediction?
+Is your result compatible with the notion that programs on your machine run in
+time proportional to the number of steps required for the computation?
 
 **** Exercise 1.23
 :properties:
 :custom_id: exercise-1.23
 :end:
 
-The ~smallest-divisor~ procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any larger even numbers.  This suggests that the values used for ~test-divisor~ should not be 2, 3, 4, 5, 6, ..., but rather 2, 3, 5, 7, 9, ....  To implement this change, define a procedure ~next~ that returns 3 if its input is equal to 2 and otherwise returns its input plus 2.  Modify the ~smallest-divisor~ procedure to use ~(next test-divisor)~ instead of ~(+ test-divisor 1)~.  With ~timed-prime-test~ incorporating this modified version of ~smallest-divisor~, run the test for each of the 12 primes found in [[#exercise-1.22][Exercise 1.22]].  Since this modification halves the number of test steps, you should expect it to run about twice as fast.  Is this expectation confirmed?  If not, what is the observed ratio of the speeds of the two algorithms, and how do you explain the fact that it is different from 2?
+The ~smallest-divisor~ procedure shown at the start of this section does lots of
+needless testing: After it checks to see if the number is divisible by 2 there
+is no point in checking to see if it is divisible by any larger even numbers.
+This suggests that the values used for ~test-divisor~ should not be 2, 3, 4, 5, 6,
+..., but rather 2, 3, 5, 7, 9, .... To implement this change, define a procedure
+~next~ that returns 3 if its input is equal to 2 and otherwise returns its input
+plus 2. Modify the ~smallest-divisor~ procedure to use ~(next test-divisor)~ instead
+of ~(+ test-divisor 1)~. With ~timed-prime-test~ incorporating this modified version
+of ~smallest-divisor~, run the test for each of the 12 primes found in [[#exercise-1.22][Exercise
+1.22]]. Since this modification halves the number of test steps, you should
+expect it to run about twice as fast. Is this expectation confirmed? If not,
+what is the observed ratio of the speeds of the two algorithms, and how do you
+explain the fact that it is different from 2?
 
 **** Exercise 1.24
 :properties:
 :custom_id: exercise-1.24
 :end:
 
-Modify the ~timed-prime-test~ procedure of [[#exercise-1.22][Exercise 1.22]] to use ~fast-prime?~ (the Fermat method), and test each of the 12 primes you found in that exercise.  Since the Fermat test has \theta(log n) growth, how would you expect the time to test primes near 1,000,000 to compare with the time needed to test primes near 1000?  Do your data bear this out?  Can you explain any discrepancy you find?
+Modify the ~timed-prime-test~ procedure of [[#exercise-1.22][Exercise 1.22]] to use ~fast-prime?~ (the
+Fermat method), and test each of the 12 primes you found in that exercise. Since
+the Fermat test has \theta(log n) growth, how would you expect the time to test
+primes near 1,000,000 to compare with the time needed to test primes near 1000?
+Do your data bear this out? Can you explain any discrepancy you find?
 
 **** Exercise 1.25
 :properties:
 :custom_id: exercise-1.25
 :end:
 
-Alyssa P. Hacker complains that we went to a lot of extra work in writing ~expmod~.  After all, she says, since we already know how to compute exponentials, we could have simply written
+Alyssa P. Hacker complains that we went to a lot of extra work in writing
+~expmod~. After all, she says, since we already know how to compute exponentials,
+we could have simply written
 
 #+begin_src scheme
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
 #+end_src
 
-Is she correct?  Would this procedure serve as well for our fast prime tester?  Explain.
+Is she correct? Would this procedure serve as well for our fast prime tester?
+Explain.
 
 **** Exercise 1.26
 :properties:
 :custom_id: exercise-1.26
 :end:
 
-Louis Reasoner is having great difficulty doing [[#exercise-1.24][Exercise 1.24]].  His ~fast-prime?~ test seems to run more slowly than his ~prime?~ test.  Louis calls his friend Eva Lu Ator over to help.  When they examine Louis's code, they find that he has rewritten the ~expmod~ procedure to use an explicit multiplication, rather than calling ~square~:
+Louis Reasoner is having great difficulty doing [[#exercise-1.24][Exercise 1.24]]. His ~fast-prime?~
+test seems to run more slowly than his ~prime?~ test. Louis calls his friend Eva
+Lu Ator over to help. When they examine Louis's code, they find that he has
+rewritten the ~expmod~ procedure to use an explicit multiplication, rather than
+calling ~square~:
 
 #+begin_src scheme
 (define (expmod base exp m)
@@ -2571,34 +2868,60 @@ Louis Reasoner is having great difficulty doing [[#exercise-1.24][Exercise 1.24]
                     m))))
 #+end_src
 
-"I don't see what difference that could make," says Louis.  "I do."  says Eva.  "By writing the procedure like that, you have transformed the \theta(log n) process into a \theta(n) process."  Explain.
+"I don't see what difference that could make," says Louis. "I do." says Eva. "By
+writing the procedure like that, you have transformed the \theta(log n) process into
+a \theta(n) process." Explain.
 
 **** Exercise 1.27
 :properties:
 :custom_id: exercise-1.27
 :end:
 
-Demonstrate that the Carmichael numbers listed in [fn:47] really do fool the Fermat test.  That is, write a procedure that takes an integer n and tests whether a^n is congruent to a modulo n for every a<n, and try your procedure on the given Carmichael numbers.
+Demonstrate that the Carmichael numbers listed in [fn:47] really do fool the
+Fermat test. That is, write a procedure that takes an integer n and tests
+whether a^n is congruent to a modulo n for every a<n, and try your procedure on
+the given Carmichael numbers.
 
 **** Exercise 1.28
 :properties:
 :custom_id: exercise-1.28
 :end:
 
-One variant of the Fermat test that cannot be fooled is called the <<i238>> Miller-Rabin test (Miller 1976; Rabin 1980).  This starts from an alternate form of Fermat's Little Theorem, which states that if n is a prime number and a is any positive integer less than n, then a raised to the (n - 1)st power is congruent to 1 modulo n.  To test the primality of a number n by the Miller-Rabin test, we pick a random number a<n and raise a to the (n - 1)st power modulo n using the ~expmod~ procedure.  However, whenever we perform the squaring step in ~expmod~, we check to see if we have discovered a "nontrivial square root of 1 modulo n," that is, a number not equal to 1 or n - 1 whose square is equal to 1 modulo n.  It is possible to prove that if such a nontrivial square root of 1 exists, then n is not prime.  It is also possible to prove that if n is an odd number that is not prime, then, for at least half the numbers a<n, computing a^(n-1) in this way will reveal a nontrivial square root of 1 modulo n.  (This is why the Miller-Rabin test cannot be fooled.)  Modify the ~expmod~ procedure to signal if it discovers a nontrivial square root of 1, and use this to implement the Miller-Rabin test with a procedure analogous to ~fermat-test~.  Check your procedure by testing various known primes and non-primes.  Hint: One convenient way to make ~expmod~ signal is to have it return 0.
+One variant of the Fermat test that cannot be fooled is called the <<i238>>
+Miller-Rabin test (Miller 1976; Rabin 1980). This starts from an alternate form
+of Fermat's Little Theorem, which states that if n is a prime number and a is
+any positive integer less than n, then a raised to the (n - 1)st power is
+congruent to 1 modulo n. To test the primality of a number n by the Miller-Rabin
+test, we pick a random number a<n and raise a to the (n - 1)st power modulo n
+using the ~expmod~ procedure. However, whenever we perform the squaring step in
+~expmod~, we check to see if we have discovered a "nontrivial square root of 1
+modulo n," that is, a number not equal to 1 or n - 1 whose square is equal to 1
+modulo n. It is possible to prove that if such a nontrivial square root of 1
+exists, then n is not prime. It is also possible to prove that if n is an odd
+number that is not prime, then, for at least half the numbers a<n, computing
+a^(n-1) in this way will reveal a nontrivial square root of 1 modulo n. (This is
+why the Miller-Rabin test cannot be fooled.) Modify the ~expmod~ procedure to
+signal if it discovers a nontrivial square root of 1, and use this to implement
+the Miller-Rabin test with a procedure analogous to ~fermat-test~. Check your
+procedure by testing various known primes and non-primes. Hint: One convenient
+way to make ~expmod~ signal is to have it return 0.
 
 ** 1.3 Formulating Abstractions with Higher-Order Procedures
 :properties:
 :custom_id: section-1.3
 :end:
 
-We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers.  For example, when we
+We have seen that procedures are, in effect, abstractions that describe compound
+operations on numbers independent of the particular numbers. For example, when
+we
 
 #+begin_src scheme
 (define (cube x) (* x x x))
 #+end_src
 
-we are not talking about the cube of a particular number, but rather about a method for obtaining the cube of any number.  Of course we could get along without ever defining this procedure, by always writing expressions such as
+we are not talking about the cube of a particular number, but rather about a
+method for obtaining the cube of any number. Of course we could get along
+without ever defining this procedure, by always writing expressions such as
 
 #+begin_src scheme
 (* 3 3 3)
@@ -2606,16 +2929,34 @@ we are not talking about the cube of a particular number, but rather about a met
 (* y y y)
 #+end_src
 
-and never mentioning ~cube~ explicitly.  This would place us at a serious disadvantage, forcing us to work always at the level of the particular operations that happen to be primitives in the language (multiplication, in this case) rather than in terms of higher-level operations.  Our programs would be able to compute cubes, but our language would lack the ability to express the concept of cubing.  One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly.  Procedures provide this ability.  This is why all but the most primitive programming languages include mechanisms for defining procedures.
+and never mentioning ~cube~ explicitly. This would place us at a serious
+disadvantage, forcing us to work always at the level of the particular
+operations that happen to be primitives in the language (multiplication, in this
+case) rather than in terms of higher-level operations. Our programs would be
+able to compute cubes, but our language would lack the ability to express the
+concept of cubing. One of the things we should demand from a powerful
+programming language is the ability to build abstractions by assigning names to
+common patterns and then to work in terms of the abstractions directly.
+Procedures provide this ability. This is why all but the most primitive
+programming languages include mechanisms for defining procedures.
 
-Yet even in numerical processing we will be severely limited in our ability to create abstractions if we are restricted to procedures whose parameters must be numbers.  Often the same programming pattern will be used with a number of different procedures.  To express such patterns as concepts, we will need to construct procedures that can accept procedures as arguments or return procedures as values.  Procedures that manipulate procedures are called <<i177>> higher-order procedures.  This section shows how higher-order procedures can serve as powerful abstraction mechanisms, vastly increasing the expressive power of our language.
+Yet even in numerical processing we will be severely limited in our ability to
+create abstractions if we are restricted to procedures whose parameters must be
+numbers. Often the same programming pattern will be used with a number of
+different procedures. To express such patterns as concepts, we will need to
+construct procedures that can accept procedures as arguments or return
+procedures as values. Procedures that manipulate procedures are called <<i177>>
+higher-order procedures. This section shows how higher-order procedures can
+serve as powerful abstraction mechanisms, vastly increasing the expressive power
+of our language.
 
 *** 1.3.1 Procedures as Arguments
 :properties:
 :custom_id: section-1.3.1
 :end:
 
-Consider the following three procedures.  The first computes the sum of the integers from ~a~ through ~b~:
+Consider the following three procedures. The first computes the sum of the
+integers from ~a~ through ~b~:
 
 #+begin_src scheme
 (define (sum-integers a b)
@@ -2650,7 +2991,11 @@ which converges to \pi/8 (very slowly):[fn:49]
       (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
 #+end_src
 
-These three procedures clearly share a common underlying pattern.  They are for the most part identical, differing only in the name of the procedure, the function of ~a~ used to compute the term to be added, and the function that provides the next value of ~a~.  We could generate each of the procedures by filling in slots in the same template:
+These three procedures clearly share a common underlying pattern. They are for
+the most part identical, differing only in the name of the procedure, the
+function of ~a~ used to compute the term to be added, and the function that
+provides the next value of ~a~. We could generate each of the procedures by
+filling in slots in the same template:
 
 #+begin_src scheme
 (define (<NAME> a b)
@@ -2660,7 +3005,10 @@ These three procedures clearly share a common underlying pattern.  They are for 
          (<NAME> (<NEXT> a) b))))
 #+end_src
 
-The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface.  Indeed, mathematicians long ago identified the abstraction of <<i378>> summation of a series and invented "sigma notation," for example
+The presence of such a common pattern is strong evidence that there is a useful
+abstraction waiting to be brought to the surface. Indeed, mathematicians long
+ago identified the abstraction of <<i378>> summation of a series and invented
+"sigma notation," for example
 
 #+begin_example
   b
@@ -2670,9 +3018,16 @@ The presence of such a common pattern is strong evidence that there is a useful 
  n=a
 #+end_example
 
-to express this concept.  The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums--for example, to formulate general results about sums that are independent of the particular series being summed.
+to express this concept. The power of sigma notation is that it allows
+mathematicians to deal with the concept of summation itself rather than only
+with particular sums--for example, to formulate general results about sums that
+are independent of the particular series being summed.
 
-Similarly, as program designers, we would like our language to be powerful enough so that we can write a procedure that expresses the concept of summation itself rather than only procedures that compute particular sums.  We can do so readily in our procedural language by taking the common template shown above and transforming the "slots" into formal parameters:
+Similarly, as program designers, we would like our language to be powerful
+enough so that we can write a procedure that expresses the concept of summation
+itself rather than only procedures that compute particular sums. We can do so
+readily in our procedural language by taking the common template shown above and
+transforming the "slots" into formal parameters:
 
 #+begin_src scheme
 (define (sum term a next b)
@@ -2682,7 +3037,10 @@ Similarly, as program designers, we would like our language to be powerful enoug
          (sum term (next a) next b))))
 #+end_src
 
-Notice that ~sum~ takes as its arguments the lower and upper bounds ~a~ and ~b~ together with the procedures ~term~ and ~next~.  We can use ~sum~ just as we would any procedure.  For example, we can use it (along with a procedure ~inc~ that increments its argument by 1) to define ~sum-cubes~:
+Notice that ~sum~ takes as its arguments the lower and upper bounds ~a~ and ~b~
+together with the procedures ~term~ and ~next~. We can use ~sum~ just as we would any
+procedure. For example, we can use it (along with a procedure ~inc~ that
+increments its argument by 1) to define ~sum-cubes~:
 
 #+begin_src scheme
 (define (inc n) (+ n 1))
@@ -2698,7 +3056,8 @@ Using this, we can compute the sum of the cubes of the integers from 1 to 10:
 3025
 #+end_src
 
-With the aid of an identity procedure to compute the term, we can define ~sum-integers~ in terms of ~sum~:
+With the aid of an identity procedure to compute the term, we can define
+~sum-integers~ in terms of ~sum~:
 
 #+begin_src scheme
 (define (identity x) x)
@@ -2732,7 +3091,9 @@ Using these procedures, we can compute an approximation to \pi:
 3.139592655589783
 #+end_src
 
-Once we have ~sum~, we can use it as a building block in formulating further concepts.  For instance, the definite integral of a function f between the limits a and b can be approximated numerically using the formula
+Once we have ~sum~, we can use it as a building block in formulating further
+concepts. For instance, the definite integral of a function f between the limits
+a and b can be approximated numerically using the formula
 
 #+begin_example
  /b     /  /     dx \    /          dx \    /           dx \      \
@@ -2762,7 +3123,9 @@ for small values of dx.  We can express this directly as a procedure:
 :custom_id: exercise-1.29
 :end:
 
-Simpson's Rule is a more accurate method of numerical integration than the method illustrated above.  Using Simpson's Rule, the integral of a function f between a and b is approximated as
+Simpson's Rule is a more accurate method of numerical integration than the
+method illustrated above. Using Simpson's Rule, the integral of a function f
+between a and b is approximated as
 
 #+begin_example
  h
@@ -2770,14 +3133,21 @@ Simpson's Rule is a more accurate method of numerical integration than the metho
  3
 #+end_example
 
-where h = (b - a)/n, for some even integer n, and y_k = f(a + kh).  (Increasing n increases the accuracy of the approximation.)  Define a procedure that takes as arguments f, a, b, and n and returns the value of the integral, computed using Simpson's Rule.  Use your procedure to integrate ~cube~ between 0 and 1 (with n = 100 and n = 1000), and compare the results to those of the ~integral~ procedure shown above.
+where h = (b - a)/n, for some even integer n, and y_k = f(a + kh). (Increasing n
+increases the accuracy of the approximation.) Define a procedure that takes as
+arguments f, a, b, and n and returns the value of the integral, computed using
+Simpson's Rule. Use your procedure to integrate ~cube~ between 0 and 1 (with n =
+100 and n = 1000), and compare the results to those of the ~integral~ procedure
+shown above.
 
 **** Exercise 1.30
 :properties:
 :custom_id: exercise-1.30
 :end:
 
-The ~sum~ procedure above generates a linear recursion.  The procedure can be rewritten so that the sum is performed iteratively.  Show how to do this by filling in the missing expressions in the following definition:
+The ~sum~ procedure above generates a linear recursion. The procedure can be
+rewritten so that the sum is performed iteratively. Show how to do this by
+filling in the missing expressions in the following definition:
 
 #+begin_src scheme
 (define (sum term a next b)
@@ -2793,7 +3163,12 @@ The ~sum~ procedure above generates a linear recursion.  The procedure can be re
 :custom_id: exercise-1.31
 :end:
 
-a. The ~sum~ procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.[fn:51] Write an analogous procedure called ~product~ that returns the product of the values of a function at points over a given range.  Show how to define ~factorial~ in terms of ~product~.  Also use ~product~ to compute approximations to \pi using the formula[fn:52]
+a. The ~sum~ procedure is only the simplest of a vast number of similar
+   abstractions that can be captured as higher-order procedures.[fn:51] Write an
+   analogous procedure called ~product~ that returns the product of the values of
+   a function at points over a given range. Show how to define ~factorial~ in
+   terms of ~product~. Also use ~product~ to compute approximations to \pi using the
+   formula[fn:52]
 
 #+begin_example
  pi   2 * 4 * 4 * 6 * 6 * 8 ...
@@ -2801,40 +3176,66 @@ a. The ~sum~ procedure is only the simplest of a vast number of similar abstract
   4   3 * 3 * 5 * 5 * 7 * 7 ...
 #+end_example
 
-b. If your ~product~ procedure generates a recursive process, write one that generates an iterative process.  If it generates an iterative process, write one that generates a recursive process.
+b. If your ~product~ procedure generates a recursive process, write one that
+   generates an iterative process. If it generates an iterative process, write
+   one that generates a recursive process.
 
 **** Exercise 1.32
 :properties:
 :custom_id: exercise-1.32
 :end:
 
-a. Show that ~sum~ and ~product~ ([[#exercise-1.31][Exercise 1.31]]) are both special cases of a still more general notion called ~accumulate~ that combines a collection of terms, using some general accumulation function:
+a. Show that ~sum~ and ~product~ ([[#exercise-1.31][Exercise 1.31]]) are both special cases of a still
+   more general notion called ~accumulate~ that combines a collection of terms,
+   using some general accumulation function:
 
 #+begin_src scheme
 (accumulate combiner null-value term a next b)
 #+end_src
 
-~accumulate~ takes as arguments the same term and range specifications as ~sum~ and ~product~, together with a ~combiner~ procedure (of two arguments) that specifies how the current term is to be combined with the accumulation of the preceding terms and a ~null-value~ that specifies what base value to use when the terms run out.  Write ~accumulate~ and show how ~sum~ and ~product~ can both be defined as simple calls to ~accumulate~.
+~accumulate~ takes as arguments the same term and range specifications as ~sum~ and
+~product~, together with a ~combiner~ procedure (of two arguments) that specifies
+how the current term is to be combined with the accumulation of the preceding
+terms and a ~null-value~ that specifies what base value to use when the terms run
+out. Write ~accumulate~ and show how ~sum~ and ~product~ can both be defined as simple
+calls to ~accumulate~.
 
-b. If your ~accumulate~ procedure generates a recursive process, write one that generates an iterative process.  If it generates an iterative process, write one that generates a recursive process.
+b. If your ~accumulate~ procedure generates a recursive process, write one that
+   generates an iterative process. If it generates an iterative process, write
+   one that generates a recursive process.
 
 **** Exercise 1.33
 :properties:
 :custom_id: exercise-1.33
 :end:
 
-You can obtain an even more general version of ~accumulate~ ([[#exercise-1.32][Exercise 1.32]]) by introducing the notion of a <<i137>> filter on the terms to be combined.  That is, combine only those terms derived from values in the range that satisfy a specified condition.  The resulting ~filtered-accumulate~ abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter.  Write ~filtered-accumulate~ as a procedure.  Show how to express the following using ~filtered-accumulate~:
+You can obtain an even more general version of ~accumulate~ ([[#exercise-1.32][Exercise 1.32]]) by
+introducing the notion of a <<i137>> filter on the terms to be combined. That
+is, combine only those terms derived from values in the range that satisfy a
+specified condition. The resulting ~filtered-accumulate~ abstraction takes the
+same arguments as accumulate, together with an additional predicate of one
+argument that specifies the filter. Write ~filtered-accumulate~ as a procedure.
+Show how to express the following using ~filtered-accumulate~:
 
-a. the sum of the squares of the prime numbers in the interval a to b (assuming that you have a ~prime?~ predicate already written)
+a. the sum of the squares of the prime numbers in the interval a to b (assuming
+   that you have a ~prime?~ predicate already written)
 
-b. the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers i < n such that GCD(i,n) = 1).
+b. the product of all the positive integers less than n that are relatively
+   prime to n (i.e., all positive integers i < n such that GCD(i,n) = 1).
 
 *** 1.3.2 Constructing Procedures Using Lambda
 :properties:
 :custom_id: section-1.3.2
 :end:
 
-In using ~sum~ as in section [[#section-1.3.1][1.3.1]], it seems terribly awkward to have to define trivial procedures such as ~pi-term~ and ~pi-next~ just so we can use them as arguments to our higher-order procedure.  Rather than define ~pi-next~ and ~pi-term~, it would be more convenient to have a way to directly specify "the procedure that returns its input incremented by 4" and "the procedure that returns the reciprocal of its input times its input plus 2."  We can do this by introducing the special form ~lambda~, which creates procedures.  Using ~lambda~ we can describe what we want as
+In using ~sum~ as in section [[#section-1.3.1][1.3.1]], it seems terribly awkward to have to define
+trivial procedures such as ~pi-term~ and ~pi-next~ just so we can use them as
+arguments to our higher-order procedure. Rather than define ~pi-next~ and ~pi-term~,
+it would be more convenient to have a way to directly specify "the procedure
+that returns its input incremented by 4" and "the procedure that returns the
+reciprocal of its input times its input plus 2." We can do this by introducing
+the special form ~lambda~, which creates procedures. Using ~lambda~ we can describe
+what we want as
 
 #+begin_src scheme
 (lambda (x) (+ x 4))
@@ -2846,7 +3247,8 @@ and
 (lambda (x) (/ 1.0 (* x (+ x 2))))
 #+end_src
 
-Then our ~pi-sum~ procedure can be expressed without defining any auxiliary procedures as
+Then our ~pi-sum~ procedure can be expressed without defining any auxiliary
+procedures as
 
 #+begin_src scheme
 (define (pi-sum a b)
@@ -2856,7 +3258,8 @@ Then our ~pi-sum~ procedure can be expressed without defining any auxiliary proc
        b))
 #+end_src
 
-Again using ~lambda~, we can write the ~integral~ procedure without having to define the auxiliary procedure ~add-dx~:
+Again using ~lambda~, we can write the ~integral~ procedure without having to define
+the auxiliary procedure ~add-dx~:
 
 #+begin_src scheme
 (define (integral f a b dx)
@@ -2867,13 +3270,16 @@ Again using ~lambda~, we can write the ~integral~ procedure without having to de
      dx))
 #+end_src
 
-In general, ~lambda~ is used to create procedures in the same way as ~define~, except that no name is specified for the procedure:
+In general, ~lambda~ is used to create procedures in the same way as ~define~,
+except that no name is specified for the procedure:
 
 #+begin_src scheme
 (lambda (<FORMAL-PARAMETERS>) <BODY>)
 #+end_src
 
-The resulting procedure is just as much a procedure as one that is created using ~define~.  The only difference is that it has not been associated with any name in the environment.  In fact,
+The resulting procedure is just as much a procedure as one that is created using
+~define~. The only difference is that it has not been associated with any name in
+the environment. In fact,
 
 #+begin_src scheme
 (define (plus4 x) (+ x 4))
@@ -2893,18 +3299,22 @@ We can read a ~lambda~ expression as follows:
 the procedure of an argument x that adds x and 4
 #+end_src
 
-Like any expression that has a procedure as its value, a ~lambda~ expression can be used as the operator in a combination such as
+Like any expression that has a procedure as its value, a ~lambda~ expression can
+be used as the operator in a combination such as
 
 #+begin_src scheme
 ((lambda (x y z) (+ x y (square z))) 1 2 3)
 12
 #+end_src
 
-or, more generally, in any context where we would normally use a procedure name.[fn:53]
+or, more generally, in any context where we would normally use a procedure
+name.[fn:53]
 
 *Using ~let~ to create local variables*
 
-Another use of ~lambda~ is in creating local variables.  We often need local variables in our procedures other than those that have been bound as formal parameters.  For example, suppose we wish to compute the function
+Another use of ~lambda~ is in creating local variables. We often need local
+variables in our procedures other than those that have been bound as formal
+parameters. For example, suppose we wish to compute the function
 
 #+begin_example
  f(x,y) = x(1 + xy)^2 + y(1 - y) + (1 + xy)(1 - y)
@@ -2918,7 +3328,10 @@ which we could also express as
  f(x,y) = xa^2 + yb + ab
 #+end_example
 
-In writing a procedure to compute f, we would like to include as local variables not only x and y but also the names of intermediate quantities like a and b.  One way to accomplish this is to use an auxiliary procedure to bind the local variables:
+In writing a procedure to compute f, we would like to include as local variables
+not only x and y but also the names of intermediate quantities like a and b. One
+way to accomplish this is to use an auxiliary procedure to bind the local
+variables:
 
 #+begin_src scheme
 (define (f x y)
@@ -2930,7 +3343,9 @@ In writing a procedure to compute f, we would like to include as local variables
             (- 1 y)))
 #+end_src
 
-Of course, we could use a ~lambda~ expression to specify an anonymous procedure for binding our local variables.  The body of ~f~ then becomes a single call to that procedure:
+Of course, we could use a ~lambda~ expression to specify an anonymous procedure
+for binding our local variables. The body of ~f~ then becomes a single call to
+that procedure:
 
 #+begin_src scheme
 (define (f x y)
@@ -2942,7 +3357,8 @@ Of course, we could use a ~lambda~ expression to specify an anonymous procedure 
    (- 1 y)))
 #+end_src
 
-This construct is so useful that there is a special form called ~let~ to make its use more convenient.  Using ~let~, the ~f~ procedure could be written as
+This construct is so useful that there is a special form called ~let~ to make its
+use more convenient. Using ~let~, the ~f~ procedure could be written as
 
 #+begin_src scheme
 (define (f x y)
@@ -2973,7 +3389,11 @@ which can be thought of as saying
  in  <BODY>
 #+end_example
 
-The first part of the ~let~ expression is a list of name-expression pairs.  When the ~let~ is evaluated, each name is associated with the value of the corresponding expression.  The body of the ~let~ is evaluated with these names bound as local variables.  The way this happens is that the ~let~ expression is interpreted as an alternate syntax for
+The first part of the ~let~ expression is a list of name-expression pairs. When
+the ~let~ is evaluated, each name is associated with the value of the
+corresponding expression. The body of the ~let~ is evaluated with these names
+bound as local variables. The way this happens is that the ~let~ expression is
+interpreted as an alternate syntax for
 
 #+begin_src scheme
 ((lambda (<VAR_1> ... <VAR_N>)
@@ -2983,11 +3403,15 @@ The first part of the ~let~ expression is a list of name-expression pairs.  When
  <EXP_N>)
 #+end_src
 
-No new mechanism is required in the interpreter in order to provide local variables.  A ~let~ expression is simply syntactic sugar for the underlying ~lambda~ application.
+No new mechanism is required in the interpreter in order to provide local
+variables. A ~let~ expression is simply syntactic sugar for the underlying ~lambda~
+application.
 
-We can see from this equivalence that the scope of a variable specified by a ~let~ expression is the body of the ~let~.  This implies that:
+We can see from this equivalence that the scope of a variable specified by a ~let~
+expression is the body of the ~let~. This implies that:
 
-- ~Let~ allows one to bind variables as locally as possible to where they are to be used.  For example, if the value of ~x~ is 5, the value of the expression
+- ~Let~ allows one to bind variables as locally as possible to where they are to
+  be used. For example, if the value of ~x~ is 5, the value of the expression
 
 #+begin_src scheme
 (+ (let ((x 3))
@@ -2995,9 +3419,14 @@ We can see from this equivalence that the scope of a variable specified by a ~le
    x)
 #+end_src
 
-is 38.  Here, the ~x~ in the body of the ~let~ is 3, so the value of the ~let~ expression is 33.  On the other hand, the ~x~ that is the second argument to the outermost ~+~ is still 5.
+is 38. Here, the ~x~ in the body of the ~let~ is 3, so the value of the ~let~
+expression is 33. On the other hand, the ~x~ that is the second argument to the
+outermost ~+~ is still 5.
 
-- The variables' values are computed outside the ~let~.  This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves.  For example, if the value of ~x~ is 2, the expression
+- The variables' values are computed outside the ~let~. This matters when the
+  expressions that provide the values for the local variables depend upon
+  variables having the same names as the local variables themselves. For
+  example, if the value of ~x~ is 2, the expression
 
 #+begin_src scheme
 (let ((x 3)
@@ -3005,9 +3434,11 @@ is 38.  Here, the ~x~ in the body of the ~let~ is 3, so the value of the ~let~ e
   (* x y))
 #+end_src
 
-will have the value 12 because, inside the body of the ~let~, ~x~ will be 3 and ~y~ will be 4 (which is the outer ~x~ plus 2).
+will have the value 12 because, inside the body of the ~let~, ~x~ will be 3 and ~y~
+will be 4 (which is the outer ~x~ plus 2).
 
-Sometimes we can use internal definitions to get the same effect as with ~let~.  For example, we could have defined the procedure ~f~ above as
+Sometimes we can use internal definitions to get the same effect as with ~let~.
+For example, we could have defined the procedure ~f~ above as
 
 #+begin_src scheme
 (define (f x y)
@@ -3018,7 +3449,8 @@ Sometimes we can use internal definitions to get the same effect as with ~let~. 
      (* a b)))
 #+end_src
 
-We prefer, however, to use ~let~ in situations like this and to use internal ~define~ only for internal procedures.[fn:54]
+We prefer, however, to use ~let~ in situations like this and to use internal
+~define~ only for internal procedures.[fn:54]
 
 **** Exercise 1.34
 :properties:
@@ -3042,18 +3474,38 @@ Then we have
 6
 #+end_src
 
-What happens if we (perversely) ask the interpreter to evaluate the combination ~(f f)~?  Explain.
+What happens if we (perversely) ask the interpreter to evaluate the combination
+~(f f)~? Explain.
 
 *** 1.3.3 Procedures as General Methods
 :properties:
 :custom_id: section-1.3.3
 :end:
 
-We introduced compound procedures in section [[#section-1.1.4][1.1.4]] as a mechanism for abstracting patterns of numerical operations so as to make them independent of the particular numbers involved.  With higher-order procedures, such as the ~integral~ procedure of section [[#section-1.3.1][1.3.1]], we began to see a more powerful kind of abstraction: procedures used to express general methods of computation, independent of the particular functions involved.  In this section we discuss two more elaborate examples--general methods for finding zeros and fixed points of functions--and show how these methods can be expressed directly as procedures.
+We introduced compound procedures in section [[#section-1.1.4][1.1.4]] as a mechanism for
+abstracting patterns of numerical operations so as to make them independent of
+the particular numbers involved. With higher-order procedures, such as the
+~integral~ procedure of section [[#section-1.3.1][1.3.1]], we began to see a more powerful kind of
+abstraction: procedures used to express general methods of computation,
+independent of the particular functions involved. In this section we discuss two
+more elaborate examples--general methods for finding zeros and fixed points of
+functions--and show how these methods can be expressed directly as procedures.
 
 *Finding roots of equations by the half-interval method*
 
-The <<i171>> half-interval method is a simple but powerful technique for finding roots of an equation f(x) = 0, where f is a continuous function.  The idea is that, if we are given points a and b such that f(a) < 0 < f(b), then f must have at least one zero between a and b.  To locate a zero, let x be the average of a and b and compute f(x).  If f(x) > 0, then f must have a zero between a and x.  If f(x) < 0, then f must have a zero between x and b.  Continuing in this way, we can identify smaller and smaller intervals on which f must have a zero.  When we reach a point where the interval is small enough, the process stops.  Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as \theta(log( L/T)), where L is the length of the original interval and T is the error tolerance (that is, the size of the interval we will consider "small enough").  Here is a procedure that implements this strategy:
+The <<i171>> half-interval method is a simple but powerful technique for finding
+roots of an equation f(x) = 0, where f is a continuous function. The idea is
+that, if we are given points a and b such that f(a) < 0 < f(b), then f must have
+at least one zero between a and b. To locate a zero, let x be the average of a
+and b and compute f(x). If f(x) > 0, then f must have a zero between a and x. If
+f(x) < 0, then f must have a zero between x and b. Continuing in this way, we
+can identify smaller and smaller intervals on which f must have a zero. When we
+reach a point where the interval is small enough, the process stops. Since the
+interval of uncertainty is reduced by half at each step of the process, the
+number of steps required grows as \theta(log( L/T)), where L is the length of the
+original interval and T is the error tolerance (that is, the size of the
+interval we will consider "small enough"). Here is a procedure that implements
+this strategy:
 
 #+begin_src scheme
 (define (search f neg-point pos-point)
@@ -3068,16 +3520,32 @@ The <<i171>> half-interval method is a simple but powerful technique for finding
                 (else midpoint))))))
 #+end_src
 
-We assume that we are initially given the function f together with points at which its values are negative and positive.  We first compute the midpoint of the two given points.  Next we check to see if the given interval is small enough, and if so we simply return the midpoint as our answer.  Otherwise, we compute as a test value the value of f at the midpoint.  If the test value is positive, then we continue the process with a new interval running from the original negative point to the midpoint.  If the test value is negative, we continue with the interval from the midpoint to the positive point.  Finally, there is the possibility that the test value is 0, in which case the midpoint is itself the root we are searching for.
+We assume that we are initially given the function f together with points at
+which its values are negative and positive. We first compute the midpoint of the
+two given points. Next we check to see if the given interval is small enough,
+and if so we simply return the midpoint as our answer. Otherwise, we compute as
+a test value the value of f at the midpoint. If the test value is positive, then
+we continue the process with a new interval running from the original negative
+point to the midpoint. If the test value is negative, we continue with the
+interval from the midpoint to the positive point. Finally, there is the
+possibility that the test value is 0, in which case the midpoint is itself the
+root we are searching for.
 
-To test whether the endpoints are "close enough" we can use a procedure similar to the one used in section [[#section-1.1.7][1.1.7]] for computing square roots:[fn:55]
+To test whether the endpoints are "close enough" we can use a procedure similar
+to the one used in section [[#section-1.1.7][1.1.7]] for computing square roots:[fn:55]
 
 #+begin_src scheme
 (define (close-enough? x y)
-  (< (abs (- x y)) 0.001))
+ (< (abs (- x y)) 0.001))
 #+end_src
 
-~search~ is awkward to use directly, because we can accidentally give it points at which f's values do not have the required sign, in which case we get a wrong answer.  Instead we will use ~search~ via the following procedure, which checks to see which of the endpoints has a negative function value and which has a positive value, and calls the ~search~ procedure accordingly.  If the function has the same sign on the two given points, the half-interval method cannot be used, in which case the procedure signals an error.[fn:56]
+~search~ is awkward to use directly, because we can accidentally give it points at
+which f's values do not have the required sign, in which case we get a wrong
+answer. Instead we will use ~search~ via the following procedure, which checks to
+see which of the endpoints has a negative function value and which has a
+positive value, and calls the ~search~ procedure accordingly. If the function has
+the same sign on the two given points, the half-interval method cannot be used,
+in which case the procedure signals an error.[fn:56]
 
 #+begin_src scheme
 (define (half-interval-method f a b)
@@ -3091,14 +3559,16 @@ To test whether the endpoints are "close enough" we can use a procedure similar 
            (error "Values are not of opposite sign" a b)))))
 #+end_src
 
-The following example uses the half-interval method to approximate \pi as the root between 2 and 4 of ~sin~ x = 0:
+The following example uses the half-interval method to approximate \pi as the root
+between 2 and 4 of ~sin~ x = 0:
 
 #+begin_src scheme
 (half-interval-method sin 2.0 4.0)
 3.14111328125
 #+end_src
 
-Here is another example, using the half-interval method to search for a root of the equation x^3 - 2x - 3 = 0 between 1 and 2:
+Here is another example, using the half-interval method to search for a root of
+the equation x^3 - 2x - 3 = 0 between 1 and 2:
 
 #+begin_src scheme
 (half-interval-method (lambda (x) (- (* x x x) (* 2 x) 3))
@@ -3109,13 +3579,19 @@ Here is another example, using the half-interval method to search for a root of 
 
 *Finding fixed points of functions*
 
-A number x is called a <<i140>> fixed point of a function f if x satisfies the equation f(x) = x.  For some functions f we can locate a fixed point by beginning with an initial guess and applying f repeatedly,
+A number x is called a <<i140>> fixed point of a function f if x satisfies the
+equation f(x) = x. For some functions f we can locate a fixed point by beginning
+with an initial guess and applying f repeatedly,
 
 #+begin_example
  f(x), f(f(x), (f(f(f(x))))
 #+end_example
 
-until the value does not change very much.  Using this idea, we can devise a procedure ~fixed-point~ that takes as inputs a function and an initial guess and produces an approximation to a fixed point of the function.  We apply the function repeatedly until we find two successive values whose difference is less than some prescribed tolerance:
+until the value does not change very much. Using this idea, we can devise a
+procedure ~fixed-point~ that takes as inputs a function and an initial guess and
+produces an approximation to a fixed point of the function. We apply the
+function repeatedly until we find two successive values whose difference is less
+than some prescribed tolerance:
 
 #+begin_src scheme
 (define tolerance 0.00001)
@@ -3131,7 +3607,8 @@ until the value does not change very much.  Using this idea, we can devise a pro
   (try first-guess))
 #+end_src
 
-For example, we can use this method to approximate the fixed point of the cosine function, starting with 1 as an initial approximation:[fn:57]
+For example, we can use this method to approximate the fixed point of the cosine
+function, starting with 1 as an initial approximation:[fn:57]
 
 #+begin_src scheme
 (fixed-point cos 1.0)
@@ -3146,7 +3623,14 @@ Similarly, we can find a solution to the equation y = ~sin~ y + ~cos~ y:
 1.2587315962971173
 #+end_src
 
-The fixed-point process is reminiscent of the process we used for finding square roots in section [[#section-1.1.7][1.1.7]].  Both are based on the idea of repeatedly improving a guess until the result satisfies some criterion.  In fact, we can readily formulate the square-root computation as a fixed-point search.  Computing the square root of some number x requires finding a y such that y^2 = x.  Putting this equation into the equivalent form y = x/y, we recognize that we are looking for a fixed point of the function[fn:58] y |-> x/y, and we can therefore try to compute square roots as
+The fixed-point process is reminiscent of the process we used for finding square
+roots in section [[#section-1.1.7][1.1.7]]. Both are based on the idea of repeatedly improving a
+guess until the result satisfies some criterion. In fact, we can readily
+formulate the square-root computation as a fixed-point search. Computing the
+square root of some number x requires finding a y such that y^2 = x. Putting
+this equation into the equivalent form y = x/y, we recognize that we are looking
+for a fixed point of the function[fn:58] y |-> x/y, and we can therefore try to
+compute square roots as
 
 #+begin_src scheme
 (define (sqrt x)
@@ -3154,9 +3638,17 @@ The fixed-point process is reminiscent of the process we used for finding square
                1.0))
 #+end_src
 
-Unfortunately, this fixed-point search does not converge.  Consider an initial guess y_1.  The next guess is y_2 = x/y_1 and the next guess is y_3 = x/y_2 = x/(x/y_1) = y_1.  This results in an infinite loop in which the two guesses y_1 and y_2 repeat over and over, oscillating about the answer.
+Unfortunately, this fixed-point search does not converge. Consider an initial
+guess y_1. The next guess is y_2 = x/y_1 and the next guess is y_3 = x/y_2 =
+x/(x/y_1) = y_1. This results in an infinite loop in which the two guesses y_1
+and y_2 repeat over and over, oscillating about the answer.
 
-One way to control such oscillations is to prevent the guesses from changing so much.  Since the answer is always between our guess y and x/y, we can make a new guess that is not as far from y as x/y by averaging y with x/y, so that the next guess after y is (1/2)(y + x/y) instead of x/y.  The process of making such a sequence of guesses is simply the process of looking for a fixed point of y |-> (1/2)(y + x/y):
+One way to control such oscillations is to prevent the guesses from changing so
+much. Since the answer is always between our guess y and x/y, we can make a new
+guess that is not as far from y as x/y by averaging y with x/y, so that the next
+guess after y is (1/2)(y + x/y) instead of x/y. The process of making such a
+sequence of guesses is simply the process of looking for a fixed point of y |->
+(1/2)(y + x/y):
 
 #+begin_src scheme
 (define (sqrt x)
@@ -3164,23 +3656,37 @@ One way to control such oscillations is to prevent the guesses from changing so 
                1.0))
 #+end_src
 
-(Note that y = (1/2)(y + x/y) is a simple transformation of the equation y = x/y; to derive it, add y to both sides of the equation and divide by 2.)
+(Note that y = (1/2)(y + x/y) is a simple transformation of the equation y =
+x/y; to derive it, add y to both sides of the equation and divide by 2.)
 
-With this modification, the square-root procedure works.  In fact, if we unravel the definitions, we can see that the sequence of approximations to the square root generated here is precisely the same as the one generated by our original square-root procedure of section [[#section-1.1.7][1.1.7]].  This approach of averaging successive approximations to a solution, a technique we that we call <<i27>> average damping, often aids the convergence of fixed-point searches.
+With this modification, the square-root procedure works. In fact, if we unravel
+the definitions, we can see that the sequence of approximations to the square
+root generated here is precisely the same as the one generated by our original
+square-root procedure of section [[#section-1.1.7][1.1.7]]. This approach of averaging successive
+approximations to a solution, a technique we that we call <<i27>> average
+damping, often aids the convergence of fixed-point searches.
 
 **** Exercise 1.35
 :properties:
 :custom_id: exercise-1.35
 :end:
 
-Show that the golden ratio \phi (section [[#section-1.2.2][1.2.2]]) is a fixed point of the transformation x |-> 1 + 1/x, and use this fact to compute \phi by means of the ~fixed-point~ procedure.
+Show that the golden ratio \phi (section [[#section-1.2.2][1.2.2]]) is a fixed point of the
+transformation x |-> 1 + 1/x, and use this fact to compute \phi by means of the
+~fixed-point~ procedure.
 
 **** Exercise 1.36
 :properties:
 :custom_id: exercise-1.36
 :end:
 
-Modify ~fixed-point~ so that it prints the sequence of approximations it generates, using the ~newline~ and ~display~ primitives shown in [[#exercise-1.22][Exercise 1.22]].  Then find a solution to x^x = 1000 by finding a fixed point of x |-> log(1000)/log(x).  (Use Scheme's primitive ~log~ procedure, which computes natural logarithms.)  Compare the number of steps this takes with and without average damping.  (Note that you cannot start ~fixed-point~ with a guess of 1, as this would cause division by log(1) = 0.)
+Modify ~fixed-point~ so that it prints the sequence of approximations it
+generates, using the ~newline~ and ~display~ primitives shown in [[#exercise-1.22][Exercise 1.22]]. Then
+find a solution to x^x = 1000 by finding a fixed point of x |->
+log(1000)/log(x). (Use Scheme's primitive ~log~ procedure, which computes natural
+logarithms.) Compare the number of steps this takes with and without average
+damping. (Note that you cannot start ~fixed-point~ with a guess of 1, as this
+would cause division by log(1) = 0.)
 
 **** Exercise 1.37
 :properties:
@@ -3199,7 +3705,11 @@ a. An infinite <<i85>> continued fraction is an expression of the form
                  D_3 + ...
 #+end_example
 
-As an example, one can show that the infinite continued fraction expansion with the n_i and the D_i all equal to 1 produces 1/\phi, where \phi is the golden ratio (described in section [[#section-1.2.2][1.2.2]]).  One way to approximate an infinite continued fraction is to truncate the expansion after a given number of terms.  Such a truncation--a so-called <<i200>> k-term finite continued fraction--has the form
+As an example, one can show that the infinite continued fraction expansion with
+the n_i and the D_i all equal to 1 produces 1/\phi, where \phi is the golden ratio
+(described in section [[#section-1.2.2][1.2.2]]). One way to approximate an infinite continued
+fraction is to truncate the expansion after a given number of terms. Such a
+truncation--a so-called <<i200>> k-term finite continued fraction--has the form
 
 #+begin_example
         N_1
@@ -3211,7 +3721,11 @@ As an example, one can show that the infinite continued fraction expansion with 
               D_K
 #+end_example
 
-Suppose that ~n~ and ~d~ are procedures of one argument (the term index i) that return the n_i and D_i of the terms of the continued fraction.  Define a procedure ~cont-frac~ such that evaluating ~(cont-frac n d k)~ computes the value of the k-term finite continued fraction.  Check your procedure by approximating 1/\phi using
+Suppose that ~n~ and ~d~ are procedures of one argument (the term index i) that
+return the n_i and D_i of the terms of the continued fraction. Define a
+procedure ~cont-frac~ such that evaluating ~(cont-frac n d k)~ computes the value of
+the k-term finite continued fraction. Check your procedure by approximating 1/\phi
+using
 
 #+begin_src scheme
 (cont-frac (lambda (i) 1.0)
@@ -3219,23 +3733,32 @@ Suppose that ~n~ and ~d~ are procedures of one argument (the term index i) that 
            k)
 #+end_src
 
-for successive values of ~k~.  How large must you make ~k~ in order to get an approximation that is accurate to 4 decimal places?
+for successive values of ~k~. How large must you make ~k~ in order to get an
+approximation that is accurate to 4 decimal places?
 
-b. If your ~cont-frac~ procedure generates a recursive process, write one that generates an iterative process.  If it generates an iterative process, write one that generates a recursive process.
+b. If your ~cont-frac~ procedure generates a recursive process, write one that
+   generates an iterative process. If it generates an iterative process, write
+   one that generates a recursive process.
 
 **** Exercise 1.38
 :properties:
 :custom_id: exercise-1.38
 :end:
 
-In 1737, the Swiss mathematician Leonhard Euler published a memoir 'De Fractionibus Continuis', which included a continued fraction expansion for e - 2, where e is the base of the natural logarithms.  In this fraction, the n_i are all 1, and the D_i are successively 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, ....  Write a program that uses your ~cont-frac~ procedure from [[#exercise-1.37][Exercise 1.37]] to approximate e, based on Euler's expansion.
+In 1737, the Swiss mathematician Leonhard Euler published a memoir 'De
+Fractionibus Continuis', which included a continued fraction expansion for e -
+2, where e is the base of the natural logarithms. In this fraction, the n_i are
+all 1, and the D_i are successively 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, .... Write
+a program that uses your ~cont-frac~ procedure from [[#exercise-1.37][Exercise 1.37]] to approximate
+e, based on Euler's expansion.
 
 **** Exercise 1.39
 :properties:
 :custom_id: exercise-1.39
 :end:
 
-A continued fraction representation of the tangent function was published in 1770 by the German mathematician J.H. Lambert:
+A continued fraction representation of the tangent function was published in
+1770 by the German mathematician J.H. Lambert:
 
 #+begin_example
                x
@@ -3247,16 +3770,27 @@ A continued fraction representation of the tangent function was published in 177
                  5 - ...
 #+end_example
 
-where x is in radians.  Define a procedure ~(tan-cf x k)~ that computes an approximation to the tangent function based on Lambert's formula.  ~k~ specifies the number of terms to compute, as in [[#exercise-1.37][Exercise 1.37]].
+where x is in radians. Define a procedure ~(tan-cf x k)~ that computes an
+approximation to the tangent function based on Lambert's formula. ~k~ specifies
+the number of terms to compute, as in [[#exercise-1.37][Exercise 1.37]].
 
 *** 1.3.4 Procedures as Returned Values
 :properties:
 :custom_id: section-1.3.4
 :end:
 
-The above examples demonstrate how the ability to pass procedures as arguments significantly enhances the expressive power of our programming language.  We can achieve even more expressive power by creating procedures whose returned values are themselves procedures.
+The above examples demonstrate how the ability to pass procedures as arguments
+significantly enhances the expressive power of our programming language. We can
+achieve even more expressive power by creating procedures whose returned values
+are themselves procedures.
 
-We can illustrate this idea by looking again at the fixed-point example described at the end of section [[#section-1.3.3][1.3.3]].  We formulated a new version of the square-root procedure as a fixed-point search, starting with the observation that [sqrt]x is a fixed-point of the function y |-> x/y.  Then we used average damping to make the approximations converge.  Average damping is a useful general technique in itself.  Namely, given a function f, we consider the function whose value at x is equal to the average of x and f(x).
+We can illustrate this idea by looking again at the fixed-point example
+described at the end of section [[#section-1.3.3][1.3.3]]. We formulated a new version of the
+square-root procedure as a fixed-point search, starting with the observation
+that [sqrt]x is a fixed-point of the function y |-> x/y. Then we used average
+damping to make the approximations converge. Average damping is a useful general
+technique in itself. Namely, given a function f, we consider the function whose
+value at x is equal to the average of x and f(x).
 
 We can express the idea of average damping by means of the following procedure:
 
@@ -3265,7 +3799,12 @@ We can express the idea of average damping by means of the following procedure:
   (lambda (x) (average x (f x))))
 #+end_src
 
-~average-damp~ is a procedure that takes as its argument a procedure ~f~ and returns as its value a procedure (produced by the ~lambda~) that, when applied to a number ~x~, produces the average of ~x~ and ~(f x)~.  For example, applying ~average-damp~ to the ~square~ procedure produces a procedure whose value at some number x is the average of x and x^2.  Applying this resulting procedure to 10 returns the average of 10 and 100, or 55:[fn:59]
+~average-damp~ is a procedure that takes as its argument a procedure ~f~ and returns
+as its value a procedure (produced by the ~lambda~) that, when applied to a number
+~x~, produces the average of ~x~ and ~(f x)~. For example, applying ~average-damp~ to
+the ~square~ procedure produces a procedure whose value at some number x is the
+average of x and x^2. Applying this resulting procedure to 10 returns the
+average of 10 and 100, or 55:[fn:59]
 
 #+begin_src scheme
 ((average-damp square) 10)
@@ -3280,7 +3819,18 @@ Using ~average-damp~, we can reformulate the square-root procedure as follows:
                1.0))
 #+end_src
 
-Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping, and the function y |-> x/y.  It is instructive to compare this formulation of the square-root method with the original version given in section [[#section-1.1.7][1.1.7]].  Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions.  In general, there are many ways to formulate a process as a procedure.  Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications.  As a simple example of reuse, notice that the cube root of x is a fixed point of the function y |-> x/y^2, so we can immediately generalize our square-root procedure to one that extracts cube roots:[fn:60]
+Notice how this formulation makes explicit the three ideas in the method:
+fixed-point search, average damping, and the function y |-> x/y. It is
+instructive to compare this formulation of the square-root method with the
+original version given in section [[#section-1.1.7][1.1.7]]. Bear in mind that these procedures
+express the same process, and notice how much clearer the idea becomes when we
+express the process in terms of these abstractions. In general, there are many
+ways to formulate a process as a procedure. Experienced programmers know how to
+choose procedural formulations that are particularly perspicuous, and where
+useful elements of the process are exposed as separate entities that can be
+reused in other applications. As a simple example of reuse, notice that the cube
+root of x is a fixed point of the function y |-> x/y^2, so we can immediately
+generalize our square-root procedure to one that extracts cube roots:[fn:60]
 
 #+begin_src scheme
 (define (cube-root x)
@@ -3290,7 +3840,10 @@ Notice how this formulation makes explicit the three ideas in the method: fixed-
 
 *Newton's method*
 
-When we first introduced the square-root procedure, in section [[#section-1.1.7][1.1.7]], we mentioned that this was a special case of <<i254>> Newton's method.  If x |-> g(x) is a differentiable function, then a solution of the equation g(x) = 0 is a fixed point of the function x |-> f(x) where
+When we first introduced the square-root procedure, in section [[#section-1.1.7][1.1.7]], we
+mentioned that this was a special case of <<i254>> Newton's method. If x |->
+g(x) is a differentiable function, then a solution of the equation g(x) = 0 is a
+fixed point of the function x |-> f(x) where
 
 #+begin_example
             g(x)
@@ -3298,11 +3851,19 @@ When we first introduced the square-root procedure, in section [[#section-1.1.7]
             Dg(x)
 #+end_example
 
-and Dg(x) is the derivative of g evaluated at x.  Newton's method is the use of the fixed-point method we saw above to approximate a solution of the equation by finding a fixed point of the function f.[fn:61]
+and Dg(x) is the derivative of g evaluated at x. Newton's method is the use of
+the fixed-point method we saw above to approximate a solution of the equation by
+finding a fixed point of the function f.[fn:61]
 
-For many functions g and for sufficiently good initial guesses for x, Newton's method converges very rapidly to a solution of g(x) = 0.[fn:62]
+For many functions g and for sufficiently good initial guesses for x, Newton's
+method converges very rapidly to a solution of g(x) = 0.[fn:62]
 
-In order to implement Newton's method as a procedure, we must first express the idea of derivative.  Note that "derivative," like average damping, is something that transforms a function into another function.  For instance, the derivative of the function x |-> x^3 is the function x |-> 3x^2.  In general, if g is a function and dx is a small number, then the derivative Dg of g is the function whose value at any number x is given (in the limit of small dx) by
+In order to implement Newton's method as a procedure, we must first express the
+idea of derivative. Note that "derivative," like average damping, is something
+that transforms a function into another function. For instance, the derivative
+of the function x |-> x^3 is the function x |-> 3x^2. In general, if g is a
+function and dx is a small number, then the derivative Dg of g is the function
+whose value at any number x is given (in the limit of small dx) by
 
 #+begin_example
          g(x + dx) - g(x)
@@ -3310,7 +3871,8 @@ In order to implement Newton's method as a procedure, we must first express the 
                 dx
 #+end_example
 
-Thus, we can express the idea of derivative (taking dx to be, say, 0.00001) as the procedure
+Thus, we can express the idea of derivative (taking dx to be, say, 0.00001) as
+the procedure
 
 #+begin_src scheme
 (define (deriv g)
@@ -3325,7 +3887,9 @@ along with the definition
 (define dx 0.00001)
 #+end_src
 
-Like ~average-damp~, ~deriv~ is a procedure that takes a procedure as argument and returns a procedure as value.  For example, to approximate the derivative of x |-> x^3 at 5 (whose exact value is 75) we can evaluate
+Like ~average-damp~, ~deriv~ is a procedure that takes a procedure as argument and
+returns a procedure as value. For example, to approximate the derivative of
+x |-> x^3 at 5 (whose exact value is 75) we can evaluate
 
 #+begin_src scheme
 (define (cube x) (* x x x))
@@ -3345,7 +3909,12 @@ With the aid of ~deriv~, we can express Newton's method as a fixed-point process
   (fixed-point (newton-transform g) guess))
 #+end_src
 
-The ~newton-transform~ procedure expresses the formula at the beginning of this section, and ~newtons-method~ is readily defined in terms of this.  It takes as arguments a procedure that computes the function for which we want to find a zero, together with an initial guess.  For instance, to find the square root of x, we can use Newton's method to find a zero of the function y |-> y^2 - x starting with an initial guess of 1.[fn:63]
+The ~newton-transform~ procedure expresses the formula at the beginning of this
+section, and ~newtons-method~ is readily defined in terms of this. It takes as
+arguments a procedure that computes the function for which we want to find a
+zero, together with an initial guess. For instance, to find the square root of
+x, we can use Newton's method to find a zero of the function y |-> y^2 - x
+starting with an initial guess of 1.[fn:63]
 
 This provides yet another form of the square-root procedure:
 
@@ -3357,16 +3926,25 @@ This provides yet another form of the square-root procedure:
 
 *Abstractions and first-class procedures*
 
-We've seen two ways to express the square-root computation as an instance of a more general method, once as a fixed-point search and once using Newton's method.  Since Newton's method was itself expressed as a fixed-point process, we actually saw two ways to compute square roots as fixed points.  Each method begins with a function and finds a fixed point of some transformation of the function.  We can express this general idea itself as a procedure:
+We've seen two ways to express the square-root computation as an instance of a
+more general method, once as a fixed-point search and once using Newton's
+method. Since Newton's method was itself expressed as a fixed-point process, we
+actually saw two ways to compute square roots as fixed points. Each method
+begins with a function and finds a fixed point of some transformation of the
+function. We can express this general idea itself as a procedure:
 
 #+begin_src scheme
 (define (fixed-point-of-transform g transform guess)
   (fixed-point (transform g) guess))
 #+end_src
 
-This very general procedure takes as its arguments a procedure ~g~ that computes some function, a procedure that transforms ~g~, and an initial guess.  The returned result is a fixed point of the transformed function.
+This very general procedure takes as its arguments a procedure ~g~ that computes
+some function, a procedure that transforms ~g~, and an initial guess. The returned
+result is a fixed point of the transformed function.
 
-Using this abstraction, we can recast the first square-root computation from this section (where we look for a fixed point of the average-damped version of y |-> x/y) as an instance of this general method:
+Using this abstraction, we can recast the first square-root computation from
+this section (where we look for a fixed point of the average-damped version of
+y |-> x/y) as an instance of this general method:
 
 #+begin_src scheme
 (define (sqrt x)
@@ -3375,7 +3953,9 @@ Using this abstraction, we can recast the first square-root computation from thi
                             1.0))
 #+end_src
 
-Similarly, we can express the second square-root computation from this section (an instance of Newton's method that finds a fixed point of the Newton transform of y |-> y^2 - x) as
+Similarly, we can express the second square-root computation from this section
+(an instance of Newton's method that finds a fixed point of the Newton transform
+of y |-> y^2 - x) as
 
 #+begin_src scheme
 (define (sqrt x)
@@ -3384,25 +3964,44 @@ Similarly, we can express the second square-root computation from this section (
                             1.0))
 #+end_src
 
-We began section [[#section-1.3][1.3]] with the observation that compound procedures are a crucial abstraction mechanism, because they permit us to express general methods of computing as explicit elements in our programming language.  Now we've seen how higher-order procedures permit us to manipulate these general methods to create further abstractions.
+We began section [[#section-1.3][1.3]] with the observation that compound procedures are a crucial
+abstraction mechanism, because they permit us to express general methods of
+computing as explicit elements in our programming language. Now we've seen how
+higher-order procedures permit us to manipulate these general methods to create
+further abstractions.
 
-As programmers, we should be alert to opportunities to identify the underlying abstractions in our programs and to build upon them and generalize them to create more powerful abstractions.  This is not to say that one should always write programs in the most abstract way possible; expert programmers know how to choose the level of abstraction appropriate to their task.  But it is important to be able to think in terms of these abstractions, so that we can be ready to apply them in new contexts.  The significance of higher-order procedures is that they enable us to represent these abstractions explicitly as elements in our programming language, so that they can be handled just like other computational elements.
+As programmers, we should be alert to opportunities to identify the underlying
+abstractions in our programs and to build upon them and generalize them to
+create more powerful abstractions. This is not to say that one should always
+write programs in the most abstract way possible; expert programmers know how to
+choose the level of abstraction appropriate to their task. But it is important
+to be able to think in terms of these abstractions, so that we can be ready to
+apply them in new contexts. The significance of higher-order procedures is that
+they enable us to represent these abstractions explicitly as elements in our
+programming language, so that they can be handled just like other computational
+elements.
 
-In general, programming languages impose restrictions on the ways in which computational elements can be manipulated.  Elements with the fewest restrictions are said to have <<i139>> first-class status.  Some of the "rights and privileges" of first-class elements are:[fn:64]
+In general, programming languages impose restrictions on the ways in which
+computational elements can be manipulated. Elements with the fewest restrictions
+are said to have <<i139>> first-class status. Some of the "rights and
+privileges" of first-class elements are:[fn:64]
 
 - They may be named by variables.
 - They may be passed as arguments to procedures.
 - They may be returned as the results of procedures.
 - They may be included in data structures.[fn:65]
 
-Lisp, unlike other common programming languages, awards procedures full first-class status.  This poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.[fn:66]
+Lisp, unlike other common programming languages, awards procedures full
+first-class status. This poses challenges for efficient implementation, but the
+resulting gain in expressive power is enormous.[fn:66]
 
 **** Exercise 1.40
 :properties:
 :custom_id: exercise-1.40
 :end:
 
-Define a procedure ~cubic~ that can be used together with the ~newtons-method~ procedure in expressions of the form
+Define a procedure ~cubic~ that can be used together with the ~newtons-method~
+procedure in expressions of the form
 
 #+begin_src scheme
 (newtons-method (cubic a b c) 1)
@@ -3415,7 +4014,10 @@ to approximate zeros of the cubic x^3 + ax^2 + bx + c.
 :custom_id: exercise-1.41
 :end:
 
-Define a procedure ~double~ that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice.  For example, if ~inc~ is a procedure that adds 1 to its argument, then ~(double inc)~ should be a procedure that adds 2.  What value is returned by
+Define a procedure ~double~ that takes a procedure of one argument as argument and
+returns a procedure that applies the original procedure twice. For example, if
+~inc~ is a procedure that adds 1 to its argument, then ~(double inc)~ should be a
+procedure that adds 2. What value is returned by
 
 #+begin_src scheme
 (((double (double double)) inc) 5)
@@ -3426,7 +4028,10 @@ Define a procedure ~double~ that takes a procedure of one argument as argument a
 :custom_id: exercise-1.42
 :end:
 
-Let f and g be two one-argument functions.  The <<i72>> composition f after g is defined to be the function x |-> f(g(x)).  Define a procedure ~compose~ that implements composition.  For example, if ~inc~ is a procedure that adds 1 to its argument,
+Let f and g be two one-argument functions. The <<i72>> composition f after g is
+defined to be the function x |-> f(g(x)). Define a procedure ~compose~ that
+implements composition. For example, if ~inc~ is a procedure that adds 1 to its
+argument,
 
 #+begin_src scheme
 ((compose square inc) 6)
@@ -3438,7 +4043,15 @@ Let f and g be two one-argument functions.  The <<i72>> composition f after g is
 :custom_id: exercise-1.43
 :end:
 
-If f is a numerical function and n is a positive integer, then we can form the nth repeated application of f, which is defined to be the function whose value at x is f(f(...(f(x))...)).  For example, if f is the function x |-> x + 1, then the nth repeated application of f is the function x |-> x + n.  If f is the operation of squaring a number, then the nth repeated application of f is the function that raises its argument to the 2^nth power.  Write a procedure that takes as inputs a procedure that computes f and a positive integer n and returns the procedure that computes the nth repeated application of f.  Your procedure should be able to be used as follows:
+If f is a numerical function and n is a positive integer, then we can form the
+nth repeated application of f, which is defined to be the function whose value
+at x is f(f(...(f(x))...)). For example, if f is the function x |-> x + 1, then
+the nth repeated application of f is the function x |-> x + n. If f is the
+operation of squaring a number, then the nth repeated application of f is the
+function that raises its argument to the 2^nth power. Write a procedure that
+takes as inputs a procedure that computes f and a positive integer n and returns
+the procedure that computes the nth repeated application of f. Your procedure
+should be able to be used as follows:
 
 #+begin_src scheme
 ((repeated square 2) 5)
@@ -3452,21 +4065,51 @@ Hint: You may find it convenient to use ~compose~ from [[#exercise-1.42][Exercis
 :custom_id: exercise-1.44
 :end:
 
-The idea of <<i356>> smoothing a function is an important concept in signal processing.  If f is a function and dx is some small number, then the smoothed version of f is the function whose value at a point x is the average of f(x - dx), f(x), and f(x + dx).  Write a procedure ~smooth~ that takes as input a procedure that computes f and returns a procedure that computes the smoothed f.  It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtained the <<i250>> n-fold smoothed function.  Show how to generate the n-fold smoothed function of any given function using ~smooth~ and ~repeated~ from [[#exercise-1.43][Exercise 1.43]].
+The idea of <<i356>> smoothing a function is an important concept in signal
+processing. If f is a function and dx is some small number, then the smoothed
+version of f is the function whose value at a point x is the average of f(x -
+dx), f(x), and f(x + dx). Write a procedure ~smooth~ that takes as input a
+procedure that computes f and returns a procedure that computes the smoothed f.
+It is sometimes valuable to repeatedly smooth a function (that is, smooth the
+smoothed function, and so on) to obtained the <<i250>> n-fold smoothed function.
+Show how to generate the n-fold smoothed function of any given function using
+~smooth~ and ~repeated~ from [[#exercise-1.43][Exercise 1.43]].
 
 **** Exercise 1.45
 :properties:
 :custom_id: exercise-1.45
 :end:
 
-We saw in section [[#section-1.3.3][1.3.3]] that attempting to compute square roots by naively finding a fixed point of y |-> x/y does not converge, and that this can be fixed by average damping.  The same method works for finding cube roots as fixed points of the average-damped y |-> x/y^2.  Unfortunately, the process does not work for fourth roots--a single average damp is not enough to make a fixed-point search for y |-> x/y^3 converge.  On the other hand, if we average damp twice (i.e., use the average damp of the average damp of y |-> x/y^3) the fixed-point search does converge.  Do some experiments to determine how many average damps are required to compute nth roots as a fixed-point search based upon repeated average damping of y |-> x/y^(n-1).  Use this to implement a simple procedure for computing nth roots using ~fixed-point~, ~average-damp~, and the ~repeated~ procedure of [[#exercise-1.43][Exercise 1.43]].  Assume that any arithmetic operations you need are available as primitives.
+We saw in section [[#section-1.3.3][1.3.3]] that attempting to compute square roots by naively
+finding a fixed point of y |-> x/y does not converge, and that this can be fixed
+by average damping. The same method works for finding cube roots as fixed points
+of the average-damped y |-> x/y^2. Unfortunately, the process does not work for
+fourth roots--a single average damp is not enough to make a fixed-point search
+for y |-> x/y^3 converge. On the other hand, if we average damp twice (i.e., use
+the average damp of the average damp of y |-> x/y^3) the fixed-point search does
+converge. Do some experiments to determine how many average damps are required
+to compute nth roots as a fixed-point search based upon repeated average damping
+of y |-> x/y^(n-1). Use this to implement a simple procedure for computing nth
+roots using ~fixed-point~, ~average-damp~, and the ~repeated~ procedure of [[#exercise-1.43][Exercise
+1.43]]. Assume that any arithmetic operations you need are available as
+primitives.
 
 **** Exercise 1.46
 :properties:
 :custom_id: exercise-1.46
 :end:
 
-Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as <<i198>> iterative improvement.  Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess.  Write a procedure ~iterative-improve~ that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess.  ~iterative-improve~ should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough.  Rewrite the ~sqrt~ procedure of section [[#section-1.1.7][1.1.7]] and the ~fixed-point~ procedure of section [[#section-1.3.3][1.3.3]] in terms of ~iterative-improve~.
+Several of the numerical methods described in this chapter are instances of an
+extremely general computational strategy known as <<i198>> iterative
+improvement. Iterative improvement says that, to compute something, we start
+with an initial guess for the answer, test if the guess is good enough, and
+otherwise improve the guess and continue the process using the improved guess as
+the new guess. Write a procedure ~iterative-improve~ that takes two procedures as
+arguments: a method for telling whether a guess is good enough and a method for
+improving a guess. ~iterative-improve~ should return as its value a procedure that
+takes a guess as argument and keeps improving the guess until it is good enough.
+Rewrite the ~sqrt~ procedure of section [[#section-1.1.7][1.1.7]] and the ~fixed-point~ procedure of
+section [[#section-1.3.3][1.3.3]] in terms of ~iterative-improve~.
 
 * 2 Building Abstractions with Data
 :properties:
@@ -3478,53 +4121,161 @@ Several of the numerical methods described in this chapter are instances of an e
 :end:
 
 #+begin_quote
-We now come to the decisive step of mathematical abstraction: we forget about what the symbols stand for.  ...[The mathematician] need not be idle; there are many operations which he may carry out with these symbols, without ever having to look at the things they stand for.
+We now come to the decisive step of mathematical abstraction: we forget about
+what the symbols stand for. ...[The mathematician] need not be idle; there are
+many operations which he may carry out with these symbols, without ever having
+to look at the things they stand for.
 
 --Hermann Weyl, 'The Mathematical Way of Thinking'
 #+end_quote
 
-We concentrated in [[#section-1][Chapter 1]] on computational processes and on the role of procedures in program design.  We saw how to use primitive data (numbers) and primitive operations (arithmetic operations), how to combine procedures to form compound procedures through composition, conditionals, and the use of parameters, and how to abstract procedures by using ~define~.  We saw that a procedure can be regarded as a pattern for the local evolution of a process, and we classified, reasoned about, and performed simple algorithmic analyses of some common patterns for processes as embodied in procedures.  We also saw that higher-order procedures enhance the power of our language by enabling us to manipulate, and thereby to reason in terms of, general methods of computation.  This is much of the essence of programming.
+We concentrated in [[#section-1][Chapter 1]] on computational processes and on the role of
+procedures in program design. We saw how to use primitive data (numbers) and
+primitive operations (arithmetic operations), how to combine procedures to form
+compound procedures through composition, conditionals, and the use of
+parameters, and how to abstract procedures by using ~define~. We saw that a
+procedure can be regarded as a pattern for the local evolution of a process, and
+we classified, reasoned about, and performed simple algorithmic analyses of some
+common patterns for processes as embodied in procedures. We also saw that
+higher-order procedures enhance the power of our language by enabling us to
+manipulate, and thereby to reason in terms of, general methods of computation.
+This is much of the essence of programming.
 
-In this chapter we are going to look at more complex data.  All the procedures in [[#section-1][Chapter 1]] operate on simple numerical data, and simple data are not sufficient for many of the problems we wish to address using computation.  Programs are typically designed to model complex phenomena, and more often than not one must construct computational objects that have several parts in order to model real-world phenomena that have several aspects.  Thus, whereas our focus in [[#section-1][Chapter 1]] was on building abstractions by combining procedures to form compound procedures, we turn in this chapter to another key aspect of any programming language: the means it provides for building abstractions by combining data objects to form <<i73>> compound data.
+In this chapter we are going to look at more complex data. All the procedures in
+[[#section-1][Chapter 1]] operate on simple numerical data, and simple data are not sufficient
+for many of the problems we wish to address using computation. Programs are
+typically designed to model complex phenomena, and more often than not one must
+construct computational objects that have several parts in order to model
+real-world phenomena that have several aspects. Thus, whereas our focus in
+[[#section-1][Chapter 1]] was on building abstractions by combining procedures to form compound
+procedures, we turn in this chapter to another key aspect of any programming
+language: the means it provides for building abstractions by combining data
+objects to form <<i73>> compound data.
 
-Why do we want compound data in a programming language?  For the same reasons that we want compound procedures: to elevate the conceptual level at which we can design our programs, to increase the modularity of our designs, and to enhance the expressive power of our language.  Just as the ability to define procedures enables us to deal with processes at a higher conceptual level than that of the primitive operations of the language, the ability to construct compound data objects enables us to deal with data at a higher conceptual level than that of the primitive data objects of the language.
+Why do we want compound data in a programming language? For the same reasons
+that we want compound procedures: to elevate the conceptual level at which we
+can design our programs, to increase the modularity of our designs, and to
+enhance the expressive power of our language. Just as the ability to define
+procedures enables us to deal with processes at a higher conceptual level than
+that of the primitive operations of the language, the ability to construct
+compound data objects enables us to deal with data at a higher conceptual level
+than that of the primitive data objects of the language.
 
-Consider the task of designing a system to perform arithmetic with rational numbers.  We could imagine an operation ~add-rat~ that takes two rational numbers and produces their sum.  In terms of simple data, a rational number can be thought of as two integers: a numerator and a denominator.  Thus, we could design a program in which each rational number would be represented by two integers (a numerator and a denominator) and where ~add-rat~ would be implemented by two procedures (one producing the numerator of the sum and one producing the denominator).  But this would be awkward, because we would then need to explicitly keep track of which numerators corresponded to which denominators.  In a system intended to perform many operations on many rational numbers, such bookkeeping details would clutter the programs substantially, to say nothing of what they would do to our minds.  It would be much better if we could "glue together" a numerator and denominator to form a pair--a <<i74>> compound data object--that our programs could manipulate in a way that would be consistent with regarding a rational number as a single conceptual unit.
+Consider the task of designing a system to perform arithmetic with rational
+numbers. We could imagine an operation ~add-rat~ that takes two rational numbers
+and produces their sum. In terms of simple data, a rational number can be
+thought of as two integers: a numerator and a denominator. Thus, we could design
+a program in which each rational number would be represented by two integers (a
+numerator and a denominator) and where ~add-rat~ would be implemented by two
+procedures (one producing the numerator of the sum and one producing the
+denominator). But this would be awkward, because we would then need to
+explicitly keep track of which numerators corresponded to which denominators. In
+a system intended to perform many operations on many rational numbers, such
+bookkeeping details would clutter the programs substantially, to say nothing of
+what they would do to our minds. It would be much better if we could "glue
+together" a numerator and denominator to form a pair--a <<i74>> compound data
+object--that our programs could manipulate in a way that would be consistent
+with regarding a rational number as a single conceptual unit.
 
-The use of compound data also enables us to increase the modularity of our programs.  If we can manipulate rational numbers directly as objects in their own right, then we can separate the part of our program that deals with rational numbers per se from the details of how rational numbers may be represented as pairs of integers.  The general technique of isolating the parts of a program that deal with how data objects are represented from the parts of a program that deal with how data objects are used is a powerful design methodology called <<i93>> data abstraction.  We will see how data abstraction makes programs much easier to design, maintain, and modify.
+The use of compound data also enables us to increase the modularity of our
+programs. If we can manipulate rational numbers directly as objects in their own
+right, then we can separate the part of our program that deals with rational
+numbers per se from the details of how rational numbers may be represented as
+pairs of integers. The general technique of isolating the parts of a program
+that deal with how data objects are represented from the parts of a program that
+deal with how data objects are used is a powerful design methodology called
+<<i93>> data abstraction. We will see how data abstraction makes programs much
+easier to design, maintain, and modify.
 
-The use of compound data leads to a real increase in the expressive power of our programming language.  Consider the idea of forming a "linear combination" ax + by.  We might like to write a procedure that would accept a, b, x, and y as arguments and return the value of ax + by.  This presents no difficulty if the arguments are to be numbers, because we can readily define the procedure
+The use of compound data leads to a real increase in the expressive power of our
+programming language. Consider the idea of forming a "linear combination" ax +
+by. We might like to write a procedure that would accept a, b, x, and y as
+arguments and return the value of ax + by. This presents no difficulty if the
+arguments are to be numbers, because we can readily define the procedure
 
 #+begin_src scheme
 (define (linear-combination a b x y)
   (+ (* a x) (* b y)))
 #+end_src
 
-But suppose we are not concerned only with numbers.  Suppose we would like to express, in procedural terms, the idea that one can form linear combinations whenever addition and multiplication are defined--for rational numbers, complex numbers, polynomials, or whatever.  We could express this as a procedure of the form
+But suppose we are not concerned only with numbers. Suppose we would like to
+express, in procedural terms, the idea that one can form linear combinations
+whenever addition and multiplication are defined--for rational numbers, complex
+numbers, polynomials, or whatever. We could express this as a procedure of the
+form
 
 #+begin_src scheme
 (define (linear-combination a b x y)
   (add (mul a x) (mul b y)))
 #+end_src
 
-where ~add~ and ~mul~ are not the primitive procedures ~+~ and ~*~ but rather more complex things that will perform the appropriate operations for whatever kinds of data we pass in as the arguments ~a~, ~b~, ~x~, and ~y~.  The key point is that the only thing ~linear-combination~ should need to know about ~a~, ~b~, ~x~, and ~y~ is that the procedures ~add~ and ~mul~ will perform the appropriate manipulations.  From the perspective of the procedure ~linear-combination~, it is irrelevant what ~a~, ~b~, ~x~, and ~y~ are and even more irrelevant how they might happen to be represented in terms of more primitive data.  This same example shows why it is important that our programming language provide the ability to manipulate compound objects directly: Without this, there is no way for a procedure such as ~linear-combination~ to pass its arguments along to ~add~ and ~mul~ without having to know their detailed structure.[fn:67]
+where ~add~ and ~mul~ are not the primitive procedures ~+~ and ~*~ but rather more
+complex things that will perform the appropriate operations for whatever kinds
+of data we pass in as the arguments ~a~, ~b~, ~x~, and ~y~. The key point is that the
+only thing ~linear-combination~ should need to know about ~a~, ~b~, ~x~, and ~y~ is that
+the procedures ~add~ and ~mul~ will perform the appropriate manipulations. From the
+perspective of the procedure ~linear-combination~, it is irrelevant what ~a~, ~b~, ~x~,
+and ~y~ are and even more irrelevant how they might happen to be represented in
+terms of more primitive data. This same example shows why it is important that
+our programming language provide the ability to manipulate compound objects
+directly: Without this, there is no way for a procedure such as
+~linear-combination~ to pass its arguments along to ~add~ and ~mul~ without having to
+know their detailed structure.[fn:67]
 
-We begin this chapter by implementing the rational-number arithmetic system mentioned above.  This will form the background for our discussion of compound data and data abstraction.  As with compound procedures, the main issue to be addressed is that of abstraction as a technique for coping with complexity, and we will see how data abstraction enables us to erect suitable <<i3>> abstraction barriers between different parts of a program.
+We begin this chapter by implementing the rational-number arithmetic system
+mentioned above. This will form the background for our discussion of compound
+data and data abstraction. As with compound procedures, the main issue to be
+addressed is that of abstraction as a technique for coping with complexity, and
+we will see how data abstraction enables us to erect suitable <<i3>> abstraction
+barriers between different parts of a program.
 
-We will see that the key to forming compound data is that a programming language should provide some kind of "glue" so that data objects can be combined to form more complex data objects.  There are many possible kinds of glue.  Indeed, we will discover how to form compound data using no special "data" operations at all, only procedures.  This will further blur the distinction between "procedure" and "data," which was already becoming tenuous toward the end of [[#section-1][Chapter 1]].  We will also explore some conventional techniques for representing sequences and trees.  One key idea in dealing with compound data is the notion of <<i62>> closure--that the glue we use for combining data objects should allow us to combine not only primitive data objects, but compound data objects as well.  Another key idea is that compound data objects can serve as <<i88>> conventional interfaces for combining program modules in mix-and-match ways.  We illustrate some of these ideas by presenting a simple graphics language that exploits closure.
+We will see that the key to forming compound data is that a programming language
+should provide some kind of "glue" so that data objects can be combined to form
+more complex data objects. There are many possible kinds of glue. Indeed, we
+will discover how to form compound data using no special "data" operations at
+all, only procedures. This will further blur the distinction between "procedure"
+and "data," which was already becoming tenuous toward the end of [[#section-1][Chapter 1]]. We
+will also explore some conventional techniques for representing sequences and
+trees. One key idea in dealing with compound data is the notion of <<i62>>
+closure--that the glue we use for combining data objects should allow us to
+combine not only primitive data objects, but compound data objects as well.
+Another key idea is that compound data objects can serve as <<i88>> conventional
+interfaces for combining program modules in mix-and-match ways. We illustrate
+some of these ideas by presenting a simple graphics language that exploits
+closure.
 
-We will then augment the representational power of our language by introducing <<i381>> symbolic expressions--data whose elementary parts can be arbitrary symbols rather than only numbers.  We explore various alternatives for representing sets of objects.  We will find that, just as a given numerical function can be computed by many different computational processes, there are many ways in which a given data structure can be represented in terms of simpler objects, and the choice of representation can have significant impact on the time and space requirements of processes that manipulate the data.  We will investigate these ideas in the context of symbolic differentiation, the representation of sets, and the encoding of information.
+We will then augment the representational power of our language by introducing
+<<i381>> symbolic expressions--data whose elementary parts can be arbitrary
+symbols rather than only numbers. We explore various alternatives for
+representing sets of objects. We will find that, just as a given numerical
+function can be computed by many different computational processes, there are
+many ways in which a given data structure can be represented in terms of simpler
+objects, and the choice of representation can have significant impact on the
+time and space requirements of processes that manipulate the data. We will
+investigate these ideas in the context of symbolic differentiation, the
+representation of sets, and the encoding of information.
 
-Next we will take up the problem of working with data that may be represented differently by different parts of a program.  This leads to the need to implement <<i161>> generic operations, which must handle many different types of data.  Maintaining modularity in the presence of generic operations requires more powerful abstraction barriers than can be erected with simple data abstraction alone.  In particular, we introduce <<i97>> data-directed programming as a technique that allows individual data representations to be designed in isolation and then combined <<i10>> additively (i.e., without modification).  To illustrate the power of this approach to system design, we close the chapter by applying what we have learned to the implementation of a package for performing symbolic arithmetic on polynomials, in which the coefficients of the polynomials can be integers, rational numbers, complex numbers, and even other polynomials.
+Next we will take up the problem of working with data that may be represented
+differently by different parts of a program. This leads to the need to implement
+<<i161>> generic operations, which must handle many different types of data.
+Maintaining modularity in the presence of generic operations requires more
+powerful abstraction barriers than can be erected with simple data abstraction
+alone. In particular, we introduce <<i97>> data-directed programming as a
+technique that allows individual data representations to be designed in
+isolation and then combined <<i10>> additively (i.e., without modification). To
+illustrate the power of this approach to system design, we close the chapter by
+applying what we have learned to the implementation of a package for performing
+symbolic arithmetic on polynomials, in which the coefficients of the polynomials
+can be integers, rational numbers, complex numbers, and even other polynomials.
 
 ** 2.1 Introduction to Data Abstraction
 :properties:
 :custom_id: section-2.1
 :end:
 
-In section [[#section-1.1.8][1.1.8]], we noted that a procedure used as an element in creating a more complex procedure could be regarded not only as a collection of particular operations but also as a procedural abstraction.  That is, the details of how the procedure was implemented could be suppressed, and the particular procedure itself could be replaced by any other procedure with the same overall behavior.  In other words, we could make an abstraction that would separate the way the procedure would be used from the details of how the procedure would be implemented in terms of more primitive procedures.  The analogous notion for compound data is called <<i94>> data abstraction.  Data abstraction is a methodology that enables us to isolate how a compound data object is used from the details of how it is constructed from more primitive data objects.
+In section [[#section-1.1.8][1.1.8]], we noted that a procedure used as an element in creating a more complex procedure could be regarded not only as a collection of particular operations but also as a procedural abstraction. That is, the details of how the procedure was implemented could be suppressed, and the particular procedure itself could be replaced by any other procedure with the same overall behavior. In other words, we could make an abstraction that would separate the way the procedure would be used from the details of how the procedure would be implemented in terms of more primitive procedures. The analogous notion for compound data is called <<i94>> data abstraction. Data abstraction is a methodology that enables us to isolate how a compound data object is used from the details of how it is constructed from more primitive data objects.
 
-The basic idea of data abstraction is to structure the programs that are to use compound data objects so that they operate on "abstract data."  That is, our programs should use data in such a way as to make no assumptions about the data that are not strictly necessary for performing the task at hand.  At the same time, a "concrete" data representation is defined independent of the programs that use the data.  The interface between these two parts of our system will be a set of procedures, called <<i343>> selectors and <<i83>> constructors, that implement the abstract data in terms of the concrete representation.  To illustrate this technique, we will consider how to design a set of procedures for manipulating rational numbers.
+The basic idea of data abstraction is to structure the programs that are to use compound data objects so that they operate on "abstract data." That is, our programs should use data in such a way as to make no assumptions about the data that are not strictly necessary for performing the task at hand. At the same time, a "concrete" data representation is defined independent of the programs that use the data. The interface between these two parts of our system will be a set of procedures, called <<i343>> selectors and <<i83>> constructors, that implement the abstract data in terms of the concrete representation. To illustrate this technique, we will consider how to design a set of procedures for manipulating rational numbers.
 
 *** 2.1.1 Example: Arithmetic Operations for Rational Numbers
 :properties:
