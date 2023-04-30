@@ -1,3 +1,5 @@
+#+title: SICP Exercises
+
 * [[file:sicp.org::Exercise 1.1][Exercise 1.1]]
 * [[file:sicp.org::Exercise 1.2][Exercise 1.2]]
 * [[file:sicp.org::Exercise 1.3][Exercise 1.3]]
