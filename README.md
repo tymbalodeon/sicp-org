@@ -1,7 +1,5 @@
 # The Wizard Book
 
-_Forked from [ilmotta/sicp-org](https://github.com/ilmotta/sicp-org)_
-
 [Structure and Interpretation of ComputerPrograms](https://mitpress.mit.edu/9780262510875/structure-and-interpretation-of-computer-programs/)
 (a.k.a. "The Wizard Book"), in org-mode format.
 
