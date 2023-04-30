@@ -7,10 +7,11 @@ _Forked from [ilmotta/sicp-org](https://github.com/ilmotta/sicp-org)_
 
 ## Exercises
 
-The `exercises.example.org` file contains a heading for each exercise already
-linked to the corresponding prompt in the text. To start completing your own
-exercises, copy the example file to `example.org` (`mv exercises.example.org
-exercises.org`) and provide your solutions, which will be ignored by git.
+The [exercises.example.org](./exercises.example.org) file contains a heading for
+each exercise already linked to the corresponding prompt in the text. To start
+completing your own exercises, copy the example file to `example.org` (`mv
+exercises.example.org exercises.org`) and provide your solutions, which will be
+ignored by git.
 
 ## Related Resources
 
