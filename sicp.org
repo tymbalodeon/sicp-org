@@ -2315,7 +2315,7 @@ increases?
 :end:
 
 The sine of an angle (specified in radians) can be computed by making use of the
-approximation ~sin~ xapprox x if x is sufficiently small, and the trigonometric
+approximation ~sin~ x approx x if x is sufficiently small, and the trigonometric
 identity
 
 #+begin_example
